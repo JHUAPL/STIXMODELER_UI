@@ -1,38 +1,93 @@
 @import '../../../defaults';
 
 .array-container {
-    padding-left: 20px;
-    padding-top: 20px;
+  padding-left: 20px;
+  padding-top: 20px;
 
-    .array-container-header {
-        font-weight: bold;
-        color: $default-active-bg;
-        padding-bottom: 3px;
+  .array-container-header {
+    font-weight: bold;
+    color: $default-active-bg;
+    padding-bottom: 3px;
+
+    span {
+      vertical-align: middle;
+      font-size: 14px;
+      cursor: pointer;
+    }
+  }
+
+  .array-container-input {
+    width: 90%;
+  }
+
+  .remove {
+    color: $error-font;
+  }
+
+  .add {
+    padding-top: 15px;
+    color: $default-active-bg;
+  }
+
+  .array-container-input {
+    height: fit-content;
+    width: 100%;
+    margin-top: 5px;
+    overflow: hidden;
+  }
+
+  .array-container-input-item {
+    overflow: hidden;
+
+    .array-container-item {
+      height: fit-content;
+      width: 100%;
+      margin-top: 1px;
+      border: 1px solid transparent;
+      overflow: hidden;
+    }
+  }
+
+  .array-container-body {
+    height: 100px;
+    overflow: auto;
+    border: 1px solid $standard-border-color;
+
+    .array-container-item {
+      cursor: pointer;
+      line-height: 30px;
+      padding-left: 10px;
+    }
+
+    .array-container-selected {
+      background-color: $default-active-bg;
+    }
+
+    .array-container-item:hover {
+      background-color: $light-font-0;
+    }
+
+    .array-block-input {
+      display: flex;
+      height: fit-content;
+      flex-direction: col;
+      width: 97%;
+
+      .input {
+        margin: 10px 0px 10px 10px;
+        flex: 1;
+      }
+
+      .add-container {
+        width: 50px;
 
         span {
-            vertical-align: middle;
-            font-size: 14px;
-            cursor: pointer;
+          cursor: pointer;
+          color: $default-active-bg;
+          padding-left: 5px;
+          padding-top: 40%;
         }
+      }
     }
-
-    .array-container-body {
-        height: 100px;
-        overflow: auto;
-        border: 1px solid $standard-border-color;
-
-        .array-container-item {
-            cursor: pointer;
-            line-height: 30px;
-            padding-left: 10px;
-        }
-
-        .array-container-selected {
-            background-color: $default-active-bg;
-        }
-
-        .array-container-item:hover {
-            background-color: $light-font-0;
-        }
-    }
+  }
 }

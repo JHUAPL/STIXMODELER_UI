@@ -1,0 +1,20 @@
+@import '../../../defaults';
+
+input.def {
+    height: 39px;
+    border: 1px solid $standard-border-color;
+    background-color: transparent;
+    width: 97%;
+    padding-left: 10px;
+    color: $dark-font-0;
+    font-size: 16px;
+    font-family: $default-font-family;
+}
+
+.custom-file-selector {
+    border-radius: 5px;
+    padding: 5px 4px 5px 11px;
+    color: #fff;
+    font-weight: bold;
+    background-color: $default-active-bg;
+}

@@ -1,36 +1,15 @@
-import React, { Component } from 'react';
-import {toJS} from 'mobx';
-import {observer, inject} from 'mobx-react';
-import { hot } from 'react-hot-loader/root';
-import {withRouter, Route, NavLink, useParams} from "react-router-dom";
-import LazyRoute from "lazy-route";
-
-import defaultStyle from "./app.scss";
-
+import { Provider } from 'mobx-react';
 import Canvas from './components/Canvas';
+import { store } from './stores/Stores';
 
-@withRouter
-@inject("store")
-@observer
-class App extends Component {
+import './App.scss';
 
-    constructor(props) {
-        super(props);
-    }
-
-    render() {
-        return (
-            <div className="content">
-                <Route
-                    exact
-                    path={'/'}
-                    render={(props) =>
-                        <Canvas {...props}/>}
-                />
-
-            </div>
-        )
-    }
+function App() {
+  return (
+    <Provider store={store}>
+      <Canvas />
+    </Provider>
+  );
 }
 
-export default hot(App);
+export default App;

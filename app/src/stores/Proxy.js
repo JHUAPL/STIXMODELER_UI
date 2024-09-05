@@ -1,11 +1,11 @@
 class Proxy {
-    constructor() {
+  constructor() {
 
-    }
+  }
 
-    submit(bundle) {
-        console.log(bundle);
-    }
+  submit(bundle) {
+    console.log(bundle);
+  }
 }
 
 export default new Proxy();

@@ -1,28 +1,25 @@
-import common from '../definitions/observable-common.json';
-import rawDefinition from '../definitions/url.json';
 import _cloneDeep from 'lodash/cloneDeep';
 import deepmerge from 'deepmerge';
+import common from '../definitions/observable-common.json';
+import rawDefinition from '../definitions/url.json';
 
-import {Base} from './Base';
+import { Base } from './Base';
 
-class Url extends Base  {
+class Url extends Base {
+  constructor() {
+    const definition_extension = {
+      img: 'observable.png',
+      prefix: 'url--',
+      active: false,
+      relationships: [],
+    };
 
-    constructor() {
-        const definition_extension = {
-            "img": "observable.png",
-            "prefix": "url--",
-            "active": false,
-            "relationships": [
-                {"type": "contains", "target": "observable", "sub-target": "file", "x_reverse": true}
-            ]
-        }
+    const def = deepmerge(definition_extension, rawDefinition);
 
-        let def = deepmerge(definition_extension, rawDefinition);
+    super(common, def);
 
-        super(common, def);
-
-        this.properties.value.type = "string";
-    }
+    this.properties.value.type = 'string';
+  }
 }
 
 const singleton = new Url();

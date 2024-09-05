@@ -1,7 +1,11 @@
-import { store } from "rfx-core";
+import { createContext, useContext } from 'react';
 
-import AppStore from "./App";
+import AppStore from './App';
 
-export default store.setup({
-    appStore: AppStore
-});
+export const store = {
+  appStore: new AppStore(),
+};
+
+export const StoreContext = createContext(store);
+
+export const useStore = () => useContext(StoreContext);

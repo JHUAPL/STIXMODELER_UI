@@ -35,14 +35,6 @@
       "$ref": "../common/identifier.json",
       "description": "The ID of the Source object that describes who created this object."
     },
-    "labels": {
-      "type": "array",
-      "description": "The labels property specifies a set of terms used to describe this object.",
-      "items": {
-        "type": "string"
-      },
-      "minItems": 1
-    },
     "created": {
       "description": "The created property represents the time at which the first version of this object was created. The timstamp value MUST be precise to the nearest millisecond.",
       "allOf": [

@@ -1,25 +1,24 @@
+import deepmerge from 'deepmerge';
 import common from '../definitions/observable-common.json';
 import rawDefinition from '../definitions/software.json';
-import deepmerge from 'deepmerge';
 
-import {Base} from './Base';
+import { Base } from './Base';
 
-class Software extends Base  {
+class Software extends Base {
+  constructor() {
+    const definition_extension = {
+      img: 'observable.png',
+      prefix: 'software--',
+      active: false,
+      relationships: [],
+    };
 
-    constructor() {
-        const definition_extension = {
-            "img": "observable.png",
-            "prefix": "software--",
-            "active": false,
-            "relationships": []
-        }
+    const def = deepmerge(definition_extension, rawDefinition);
 
-        let def = deepmerge(definition_extension, rawDefinition);
+    super(common, def);
 
-        super(common, def);
-
-        this.properties.languages.control = "csv";
-    }
+    this.properties.languages.control = 'csv';
+  }
 }
 
 const singleton = new Software();

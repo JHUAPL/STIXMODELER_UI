@@ -1,33 +1,29 @@
+import deepmerge from 'deepmerge';
 import common from '../definitions/observable-common.json';
 import rawDefinition from '../definitions/email-addr.json';
-import deepmerge from 'deepmerge';
 
-import {Base} from './Base';
+import { Base } from './Base';
 
-class EmailAddr extends Base  {
+class EmailAddr extends Base {
+  constructor() {
+    const definition_extension = {
+      img: 'observable.png',
+      prefix: 'email-addr--',
+      active: false,
+      relationships: [
+        {
+          type: 'addr-belongs-to', target: 'observable', 'sub-target': 'user-account', x_embed: 'belongs_to_ref',
+        },
+        { type: 'addr-belongs-to', target: 'user-account', x_embed: 'belongs_to_ref', }
+      ],
+    };
 
-    constructor() {
-        const definition_extension = {
-            "img": "observable.png",
-            "prefix": "email-addr--",
-            "active": false,
-            "relationships": [
-                {"type": "from", "target": "observable", "sub-target": "email-message", "x_reverse": true, "x_embed": "from_ref"},
-                {"type": "to", "target": "observable", "sub-target": "email-message", "x_reverse": true, "x_embed": "to_refs"},
-                {"type": "cc", "target": "observable", "sub-target": "email-message", "x_reverse": true, "x_embed": "cc_refs"},
-                {"type": "bcc", "target": "observable", "sub-target": "email-message", "x_reverse": true, "x_embed": "bcc_refs"},
-                {"type": "sender", "target": "observable", "sub-target": "email-message", "x_reverse": true, "x_embed": "sender_ref"},
-                {"type": "addr-belongs-to", "target": "observable", "sub-target": "user-account", "x_embed": "belongs_to_ref"},
-                {"type": "addr-belongs-to", "target": "user-account", "x_embed": "belongs_to_ref"}
-            ]
-        }
+    const def = deepmerge(definition_extension, rawDefinition);
 
-        let def = deepmerge(definition_extension, rawDefinition);
+    super(common, def);
 
-        super(common, def);
-
-        this.properties.belongs_to_ref.control = "hidden";
-    }
+    this.properties.belongs_to_ref.control = 'hidden';
+  }
 }
 
 const singleton = new EmailAddr();

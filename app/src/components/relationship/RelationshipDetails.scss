@@ -1,0 +1,139 @@
+@import '../../defaults';
+
+.details {
+    font-size: 18px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+
+    .header {
+        padding: 20px;
+        font-size: 18px;
+        height: 40px;
+
+        display: flex;
+        flex-direction: row;
+
+        background-color: $lt-gray-bg;
+
+        .title {
+            padding-top: 5px;
+            img {
+                vertical-align: middle;
+                padding-right: 5px;
+            }
+
+            flex: 1;
+        }
+
+        .delete {
+            padding-left: 7px;
+            width: 80px;
+            display: flex;
+            background-color: $default-active-bg;
+            border-radius: 5px;
+            padding-top: 7px;
+            color: $light-font-0;
+            cursor: pointer;
+
+            font-size: 14px;
+
+            span {
+                padding-left: 1px;
+            }
+
+            .text {
+                padding-top: 3px;
+            }
+        }
+
+        .delete:hover {
+            background-color: $error-font;
+        }
+    }
+
+    .body {
+        overflow-y: scroll;
+        overflow-x: hidden;
+        flex: 1;
+
+        .preview {
+            padding-left: 20px;
+            padding-top: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            font-family: $default-font-family;
+            line-height: 30px;
+
+            img {
+                vertical-align: middle;
+            }
+
+            img.src-image {
+                padding-right: 5px;
+            }
+
+            img.target-image {
+                padding-right: 5px;
+                padding-left: 5px;
+            }
+
+            .rel-type {
+                color: $default-active-bg;
+                padding-left: 10px;
+                padding-right: 10px;
+            }
+        }
+
+        .submit-btn {
+            border-radius: 5px;
+            cursor: pointer;
+            padding: 5px 11px 5px 11px;
+            color: #fff;
+            font-weight: bold;
+            background-color: $default-active-bg;
+            margin-left: 10px;
+            margin-top: 10px;
+            width: fit-content;
+      
+            .i {
+              width: 20px;
+              vertical-align: middle;
+              font-size: 16px;
+            }
+          }
+
+        .item {
+            padding-left: 20px;
+            padding-top: 15px;
+            font-weight: normal;
+
+            .horizontal-slider {
+                width: 98%;
+            }
+
+            .item-header {
+                font-weight: bold;
+                color: $default-active-bg;
+                padding-bottom: 3px;
+
+                span {
+                    padding-left: 3px;
+                    vertical-align: middle;
+                    font-size: 14px;
+                    cursor: pointer;
+                }
+            }
+        }
+
+        .slider {
+            padding-bottom: 20px;
+        }
+    }
+
+    .footer {
+        height: 40px;
+    }
+
+
+}
