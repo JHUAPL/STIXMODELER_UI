@@ -3,7 +3,10 @@
 This is a fork of the [STIX Modeler](https://github.com/STIX-Modeler/UI/tree/develop), originally created by Jason Minnick
 
 ## Overview
-A React-based user interface tool for visualizing, creating, and modifying STIX 2.1 bundles
+A React-based user interface tool for visualizing, creating, and modifying STIX 2.1 bundles.
+
+This material is based upon work supported by the U.S. Department of Homeland Security / Cybersecurity and Infrastructure Security Agency. Any views and conclusions contained on this page are those of the authors and should not be interpreted as necessarily representing the official policies, either
+expressed or implied, of the U.S. Department of Homeland Security / Cybersecurity and Infrastructure Security Agency.
 
 ## New Features
 - Define custom STIX Domain Objects (SDO) using schemas
