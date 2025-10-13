@@ -1,4 +1,4 @@
-@import '../../../defaults';
+@use '../../../defaults';
 
 .mask {
     position: fixed;
@@ -7,7 +7,7 @@
     right: 0px;
     bottom: 0px;
     background-color: rgba(0, 0, 0,.2);
-    z-index: $panel-mask-index;
+    z-index: defaults.$panel-mask-index;
 
     .panel {
         position: absolute;
@@ -17,7 +17,7 @@
         bottom: 0px;
         background-color: #fff;
         box-shadow: -20px 25px 50px 0px #000;
-        z-index: $panel-index;
+        z-index: defaults.$panel-index;
         display: flex;
         flex-direction: column;
     }

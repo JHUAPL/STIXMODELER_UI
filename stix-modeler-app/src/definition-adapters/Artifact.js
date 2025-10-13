@@ -20,10 +20,7 @@ class Artifact extends Base {
     this.properties.payload_bin.type = 'string';
     this.properties.url.type = 'string';
     this.properties.encryption_algorithm.type = 'string';
-
-    this.properties.hashes.value = {};
-
-    this.properties.hashes.control = 'genericobject';
+    this.properties.encryption_algorithm.vocab = this.definitions["encryption-algorithm-enum"].enum;
   }
 }
 

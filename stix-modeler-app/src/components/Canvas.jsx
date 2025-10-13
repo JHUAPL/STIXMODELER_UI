@@ -3,7 +3,7 @@ import { inject, observer } from 'mobx-react';
 import BottomMenu from './menus/BottomMenu';
 import TopMenu from './menus/TopMenu';
 import Details from './Details';
-import SDOEditor from './schema/SDOEditor';
+import ExtensionEditor from './schema/ExtensionEditor';
 import FileImporter from './FileImporter';
 import JsonViewer from './bundle/JsonViewer';
 import JsonPaste from './bundle/JsonPaste';
@@ -11,7 +11,8 @@ import SchemaPaste from './schema/SchemaPaste';
 import RelationshipPicker from './relationship/RelationshipPicker';
 import RelationshipDetails from './relationship/RelationshipDetails';
 import RelationshipEditor from './relationship/RelationshipEditor';
-import SDOPicker from './schema/SDOPicker';
+import ExtensionPicker from './schema/ExtensionPicker';
+import LayoutPanel from './layout/LayoutPanel';
 import Growl from './ui/growl/Growl';
 import SubmissionError from './SubmissionError';
 import Flow from './Flow/Flow';
@@ -20,8 +21,7 @@ import './canvas.scss';
 
 class Canvas extends React.Component {
   constructor(props) {
-    super(props);
-
+    super(props);    
     this.store = this.props.store.appStore;
 
     this.generateNodeID = this.generateNodeID.bind(this);
@@ -48,10 +48,16 @@ class Canvas extends React.Component {
     this.onClickShowRelDetailsHandler = this.onClickShowRelDetailsHandler.bind(
       this
     );
-    this.onClickShowSDOPickerHandler = this.onClickShowSDOPickerHandler.bind(
+    this.onClickShowExtensionPickerHandler = this.onClickShowExtensionPickerHandler.bind(
       this
     );
-    this.onClickHideSDOPickerHandler = this.onClickHideSDOPickerHandler.bind(
+    this.onClickHideExtensionPickerHandler = this.onClickHideExtensionPickerHandler.bind(
+      this
+    );
+    this.onClickShowLayoutPanelHandler = this.onClickShowLayoutPanelHandler.bind(
+      this
+    );
+    this.onClickHideLayoutPanelHandler = this.onClickHideLayoutPanelHandler.bind(
       this
     );
     this.onClickShowImporterHandler = this.onClickShowImporterHandler.bind(
@@ -65,13 +71,13 @@ class Canvas extends React.Component {
     this.onClickCreateRelHandler = this.onClickCreateRelHandler.bind(this);
     this.onClickEditRelHandler = this.onClickEditRelHandler.bind(this);
     this.onClickSelectRelHandler = this.onClickSelectRelHandler.bind(this);
-    this.onClickSelectSDOHandler = this.onClickSelectSDOHandler.bind(this);
+    this.onClickSelectExtHandler = this.onClickSelectExtHandler.bind(this);
     this.onClickShowGrowlHandler = this.onClickShowGrowlHandler.bind(this);
     this.onClickGroupNodeHandler = this.onClickGroupNodeHandler.bind(this);
     this.onClickGroupModeHandler = this.onClickGroupModeHandler.bind(this);
     this.onClickSubmitGroupingHandler = this.onClickSubmitGroupingHandler.bind(this);
     this.onChangeNodeHandler = this.onChangeNodeHandler.bind(this);
-    this.onChangeSDOHandler = this.onChangeSDOHandler.bind(this);
+    this.onChangeExtHandler = this.onChangeExtHandler.bind(this);
     this.onChangeSchemaHandler = this.onChangeSchemaHandler.bind(this);
     this.onChangeBundleHandler = this.onChangeBundleHandler.bind(this);
     this.onChangeDateHandler = this.onChangeDateHandler.bind(this);
@@ -129,24 +135,45 @@ class Canvas extends React.Component {
     );
     this.onClickSchemaPasteHandler = this.onClickSchemaPasteHandler.bind(this);
     this.onClickDeleteHandler = this.onClickDeleteHandler.bind(this);
-    this.onClickDeleteSDOHandler = this.onClickDeleteSDOHandler.bind(this);
+    this.onClickDeleteExtHandler = this.onClickDeleteExtHandler.bind(this);
     this.onClickDeleteRelHandler = this.onClickDeleteRelHandler.bind(this);
-    this.onClickSubmitHandler = this.onClickSubmitHandler.bind(this);
+    this.onClickExportHandler = this.onClickExportHandler.bind(this);
+    this.onClickShowSubmissionErrorHandler = this.onClickShowSubmissionErrorHandler.bind(this);
     this.onClickHideSubmissionErrorHandler = this.onClickHideSubmissionErrorHandler.bind(
       this
     );
+    this.onClickErrorHandler = this.onClickErrorHandler.bind(this);
+    
+
   }
 
-  componentWillUnmount() {
-    document.removeEventListener('dragover', () => {}, false);
-  }
-
+  /**
+   * Select the node with specified id.
+   * @param {string} nodeId id of node
+   */
   onClickHandler(nodeId) {
     const node = this.store.getNodeById(nodeId);
     this.store.setShowDetails(true);
     this.store.setSelected(node);
   }
 
+  /**
+   * Select the node associated with the specified id,
+   * from the Submission Errors panel.
+   * @param {string} nodeId
+   */
+  onClickErrorHandler(nodeId) {
+    this.store.setShowSubmissionError(false);
+    this.store.showSubmissionErrorBadge = false;
+    const node = this.store.getNodeById(nodeId);
+    this.store.setShowDetails(true);
+    this.store.setSelected(node);
+  }
+
+  /**
+   * Activate or deactivate grouping selection.
+   * @param {boolean} isGrouping whether currently selecting group
+   */
   onClickGroupModeHandler(isGrouping) {
     this.store.setGroupMode(isGrouping);
     if (!isGrouping) {
@@ -155,11 +182,20 @@ class Canvas extends React.Component {
     }
   }
 
+  /**
+   * Add or remove the node with specified node from
+   * grouping selection.
+   * @param {string} id node id 
+   */
   onClickGroupNodeHandler(id) {
     this.store.modifyGroup(id);
     this.setUpdateFlow(true);
   }
 
+  /**
+   * Create a new Grouping SDO, including all nodes
+   * from the grouping selection.
+   */
   onClickSubmitGroupingHandler() {
     const id = this.generateNodeID('grouping--');
     this.store.createGroup(id);
@@ -167,73 +203,140 @@ class Canvas extends React.Component {
     this.setUpdateFlow(true);
   }
 
+  /**
+   * Select the relationship with the specified ID
+   * to edit via the Relationship Editor panel.
+   * @param {*} relId relationship id
+   */
   onClickRelHandler(relId) {
     const rel = this.store.getRelById(relId);
     this.store.setShowRelEditor(true);
     this.store.setSelectedRel(rel);
   }
 
+  /**
+   * Hide the details panel.
+   */
   onClickHideDetailsHandler() {
     this.store.setShowDetails(false);
   }
 
+  /**
+   * Hide the Extension Editor panel.
+   */
   onClickHideEditorHandler() {
     this.store.setShowEditor(false);
   }
 
+  /**
+   * Hide the Json Paste panel.
+   */
   onClickHideJsonPasteHandler() {
     this.store.setShowJSONPaste(false);
   }
 
+  /**
+   * Show the Json Paste panel.
+   */
   onClickShowJsonPasteHandler() {
     this.store.setShowJSONPaste(true);
   }
 
+  /**
+   * Hide the Schema Paste panel.
+   */
   onClickHideSchemaPasteHandler() {
     this.store.setShowSchemaPaste(false);
   }
 
+  /**
+   * Show the Schema Paste panel.
+   */
   onClickShowSchemaPasteHandler() {
     this.store.setShowSchemaPaste(true);
   }
 
+  /**
+   * Display the growl message.
+   * @param {string} message growl message
+   */
   onClickShowGrowlHandler(message) {
     this.store.setGrowlMessage(message);
     this.store.setShowGrowl(true);
   }
 
-  onClickHideSubmissionErrorHandler() {
-    this.store.resetSubmissionError();
+  /**
+   * Hide the Submission Error panel.
+   */
+  onClickShowSubmissionErrorHandler() {
+    this.store.setShowSubmissionError(true);
+    this.store.validateSubmission();
   }
 
+  /**
+   * Hide the Submission Error panel.
+   */
+  onClickHideSubmissionErrorHandler() {
+    this.store.showSubmissionErrorBadge = false;
+    this.store.setShowSubmissionError(false);
+  }
+
+  /**
+   * Delete the selected node.
+   */
   onClickDeleteHandler() {
     this.store.deleteSelectedNode();
     this.setUpdateFlow(true);
   }
 
-  onClickDeleteSDOHandler() {
-    this.store.deleteSelectedSDO();
+  /**
+   * Delete the selected extension.
+   */
+  onClickDeleteExtHandler() {
+    this.store.deleteSelectedExt();
+    this.setUpdateFlow(true);
   }
 
+  /**
+   * Delete the selected relationship.
+   */
   onClickDeleteRelHandler() {
     this.store.deleteSelectedRelationship();
     this.setUpdateFlow(true);
   }
+  
 
+  /**
+   * Update the specified property value for
+   * the selected node.
+   * @param {*} event 
+   */
   onChangeNodeHandler(event) {
     this.store.editNodeValues(event);
     this.setUpdateFlow(true);
   }
 
-  onChangeSDOHandler(event) {
-    this.store.editSDOValues(event);
-    this.forceUpdate();
+  /**
+   * Update the specified property value for
+   * the selected extension.
+   * @param {*} event 
+   */
+  onChangeExtHandler(event) {
+    this.store.editExtensionValues(event);
   }
 
+  /**
+   * Import a schema from a file.
+   * @param {object} file schema json
+   */
   onChangeSchemaHandler(file) {
     this.store.loadSchemaFromFile(file);
   }
 
+  /**
+   * Import a bundle from a file.
+   * @param {*} file bundle json
+   */
   onChangeBundleHandler(file) {
     this.store.loadBundleFromFile(file);
     this.store.nodes.map((n) => {
@@ -242,58 +345,129 @@ class Canvas extends React.Component {
     this.setUpdateFlow(true);
   }
 
+  /**
+   * Update the Creator ID for SDO, SCO, and SROs created
+   * via the STIX UI.
+   * @param {string} id 
+   */
   onChangeCreatorIDHandler(id) {
     this.store.updateCreatorID(id);
   }
 
+  /**
+   * Update the specified date property for the
+   * selected node.
+   * @param {string} property
+   * @param {*} datetime
+   */
   onChangeDateHandler(property, datetime) {
     const value = this.store.generateTimestamp(datetime);
     this.mutateOnEvent(property, value);
   }
 
+  /**
+   * Update the specified array property for 
+   * the selected node.
+   * @param {string} property 
+   * @param {*} value 
+   */
   onClickArrayHandler(property, value) {
     this.mutateOnEvent(property, value);
   }
 
+  /**
+   * Update the specified property for
+   * the selected node (for Slider inputs).
+   * @param {string} property 
+   * @param {*} value 
+   */
   onChangeSliderHandler(property, value) {
     this.mutateOnEvent(property, value);
   }
 
+  /**
+   * Update the specified boolean property
+   * for the selected node.
+   * @param {string} property 
+   * @param {boolean} value 
+   */
   onClickBooleanHandler(property, value) {
     this.mutateOnEvent(property, value);
   }
 
+  /**
+   * Update the specified kill chain property
+   * for the selected node.
+   * @param {string} property 
+   * @param {*} value 
+   */
   onChangePhaseHandler(property, value) {
     this.mutateOnEvent(property, value);
   }
 
+  /**
+   * Update the specified property for the
+   * selected node (for Confirm Text Area inputs).
+   * @param {string} property 
+   * @param {string} value 
+   */
   onClickAddTextHandler(property, value) {
     this.mutateOnEvent(property, value);
   }
 
+  /**
+   * Update the specified list property for the
+   * selected node.
+   * @param {string} property 
+   * @param {*} value 
+   */
   onChangeListHandler(property, value) {
     this.mutateOnEvent(property, value);
   }
 
+  /**
+   * Update the object property for the selected node.
+   * @param {string} property 
+   * @param {*} event 
+   */
   onChangeGenericObjectHandler(property, event) {
     this.mutateOnEvent(property, event.currentTarget.value);
   }
 
-  onClickRemovePhaseHander(property, value) {
-    this.store.removeKillChainPhase(value);
+  /**
+   * Remove the specified kill chain phase property
+   * for the selected node.
+   * @param {string} property 
+   * @param {number} idx index of phase in kill chain
+   */
+  onClickRemovePhaseHander(property, idx) {
+    this.store.deleteArrayObject(idx, property);
   }
 
+  /**
+   * Update the specified array property for the selected value 
+   * (for use with Comma Seperated Value inputs).
+   * @param {*} event 
+   */
   onChangeCSVHandler(event) {
     this.store.editCSVInput(event);
   }
 
+  /**
+   * Create a new relationship between the specified
+   * source and target.
+   * @param {string} srcId id of source
+   * @param {string} targetId id of target
+   * @param {object} rel relationship object
+   */
   onClickCreateRelHandler(srcId, targetId, rel) {
     const src = { id: srcId, };
     const target = { id: targetId, };
     const relationship = this.store.makeRelationship(src, target, rel);
     if (relationship) {
       this.onClickSelectRelHandler(relationship);
-      this.store.addCustomRelationship(rel, srcId, targetId);
+      // this.store.addCustomRelationship(rel, srcId, targetId);
+      this.store.addCustomRelationship(rel, srcId);
       this.setUpdateFlow(true);
     } else {
       this.store.setGrowlMessage('Could not create relationship');
@@ -301,12 +475,20 @@ class Canvas extends React.Component {
     }
   }
 
+  /**
+   * Edit the specified relationship.
+   * @param {object} rel 
+   */
   onClickEditRelHandler(rel) {
     this.store.editRelationship(rel);
     this.store.setShowRelEditor(false);
     this.setUpdateFlow(true);
   }
 
+  /**
+   * Select the specified relationship.
+   * @param {object} relationship 
+   */
   onClickSelectRelHandler(relationship) {
     this.store.setShowRelDetails(false);
     this.store.manuallySelectRelationship(relationship);
@@ -314,107 +496,211 @@ class Canvas extends React.Component {
     this.setUpdateFlow(true);
   }
 
-  onClickSelectSDOHandler(sdo) {
-    this.store.setSelectedSDO(sdo);
+  /**
+   * Select the specified extension.
+   * @param {object} extension 
+   */
+  onClickSelectExtHandler(extension) {
+    this.store.setSelectedExt(extension)
     this.store.setShowEditor(true);
   }
 
+  /**
+   * Add an object to the specified object array
+   * property for the selected node.
+   * @param {string} field 
+   * @param {list} requiredFields 
+   */
   onClickAddObjectHandler(field, requiredFields) {
     this.store.addDefaultObject(field, requiredFields);
   }
 
+  /**
+   * Delete the specified property from an external reference
+   * for the selected node.
+   * @param {object} select property to delete
+   * @param {number} idx index of external reference in external references
+   */
   onClickDeletePropertyHandler(select, idx) {
     this.store.deleteERObjectProperty(select, idx);
   }
 
+  /**
+   * Delete the specified field for an object in the specified
+   * property array for the selected node.
+   * @param {string} select object property
+   * @param {number} idx index of object in node property
+   * @param {string} property node property
+   */
   onClickDeleteArrayObjectPropertyHandler(select, idx, property) {
     this.store.deleteArrayObjectProperty(select, idx, property);
   }
 
+  /**
+   * Delete the specified external reference from the
+   * external references property for the selected node.
+   * @param {number} idx external reference index
+   */
   onClickDeleteERHandler(idx) {
     this.store.deleteERObject(idx);
   }
 
+  /**
+   * Delete the specified object from the specified
+   * array property for the selected node.
+   * @param {number} idx index of object in node property
+   * @param {string} property node property
+   */
   onClickDeleteArrayObjectHandler(idx, property) {
     this.store.deleteArrayObject(idx, property);
   }
 
+  /**
+   * Update the specified field for an object in the specified
+   * property array for the selected node.
+   * @param {string} select object property
+   * @param {number} idx index of object in node property
+   * @param {string} property node property
+   */
   onChangeERHandler(input, select, idx) {
     this.store.changeERValue(input, select, idx);
   }
 
+  /**
+   * Update the specified object from the specified
+   * array property for the selected node.
+   * @param {number} idx index of object in node property
+   * @param {string} property node property
+   */
   onChangeArrayObjectHandler(input, field, idx, property) {
     this.store.changeArrayObjectValue(input, field, idx, property);
   }
 
+  /**
+   * Show the JSON Viewer panel.
+   */
   onClickShowJsonHandler() {
-    this.store.mutateBundle();
+    this.store.stringifyBundle();
     this.store.setShowJSON(true);
   }
 
+  /**
+   * Hide the JSON Viewer panel.
+   */
   onClickHideJsonHandler() {
     this.store.setShowJSON(false);
   }
 
+  /**
+   * Update the store pasteBundle value to 
+   * the specified value.
+   * @param {*} event 
+   */
   onChangeJSONPasteHandler(event) {
     this.store.setPasteBundle(event.currentTarget.value);
   }
 
+  /**
+   * Import a bundle from the Json Paste panel.
+   */
   onClickJSONPasteHandler() {
-    this.store.loadBundleFromPaste();
-
+    this.store.loadBundleFromPaste();      
     this.store.nodes.map((n) => {
       this.transition(n.id, true);
     });
     this.setUpdateFlow(true);
   }
 
+  /**
+   * Update the store pasteSchema value to 
+   * the specified value.
+   * @param {*} event 
+   */
   onChangeSchemaPasteHandler(event) {
     this.store.setPasteSchema(event.currentTarget.value);
   }
 
+  /**
+   * Import a schema from the Schema Paste panel.
+   */
   onClickSchemaPasteHandler() {
     this.store.loadSchemaFromPaste();
   }
 
+  /**
+   * Show the Relationship Details panel.
+   */
   onClickShowRelDetailsHandler() {
     this.store.setShowRelDetails(true);
     this.store.setShowRelPicker(false);
   }
 
+  /**
+   * Hide the Relationship Details panel.
+   */
   onClickHideRelDetailsHandler() {
     this.store.setShowRelDetails(false);
     this.store.setShowRelPicker(true);
   }
 
+  /**
+   * Hide the Relationship Editor panel.
+   */
   onClickHideRelEditorHandler() {
     this.store.setShowRelEditor(false);
   }
 
+  /**
+   * Hide the Relationship Picker panel.
+   */
   onClickHideRelPickerHandler() {
     this.store.setShowRelPicker(false);
   }
 
-  onClickShowSDOPickerHandler() {
-    this.store.setShowSDOPicker(true);
+  /**
+   * Show the Extension Picker panel.
+   */
+  onClickShowExtensionPickerHandler() {
+    this.store.setShowExtensionPicker(true);
   }
 
-  onClickHideSDOPickerHandler() {
-    this.store.setShowSDOPicker(false);
+  /**
+   * Hide the Extension Picker panel.
+   */
+  onClickHideExtensionPickerHandler() {
+    this.store.setShowExtensionPicker(false);
   }
 
+  onClickShowLayoutPanelHandler() {
+    this.store.setShowLayoutPanel(true);
+  }
+  onClickHideLayoutPanelHandler() {
+    this.store.setShowLayoutPanel(false);
+  }
+
+  /**
+   * Hide the File Importer panel.
+   */
   onClickHideImporterHandler() {
     this.store.setShowImporter(false);
   }
 
+  /**
+   * Show the File Importer panel.
+   */
   onClickShowImporterHandler() {
     this.store.setShowImporter(true);
   }
 
+  // Prevent event propagation.
   onDragOverHandler(event) {
     event.preventDefault();
   }
 
+  /**
+   * Set the dragged source node to the specified node.
+   * @param {*} event 
+   */
   onDragStartHandler(event) {
     const node = JSON.parse(event.dataTransfer.getData('node'));
     this.store.setDragging(node);
@@ -426,7 +712,11 @@ class Canvas extends React.Component {
     }, 2500);
   }
 
-  // Drop on canvas
+  /**
+   * Create a new node of the dropped icon type, either 
+   * directly or as an observable for the drop target.
+   * @param {*} event 
+   */
   onDropHandler(event) {
     event.preventDefault();
     const node = this.store.dragging;
@@ -471,7 +761,11 @@ class Canvas extends React.Component {
     }
   }
 
-  // Connect two nodes via a new relationship
+  /**
+   * Create a relationship between the source and target nodes.
+   * @param {string} sourceId source id
+   * @param {string} targetId target id
+   */
   onConnectNodeHandler(sourceId, targetId) {
     const sourceNode = this.store.getNodeById(sourceId);
     const targetNode = this.store.getNodeById(targetId);
@@ -487,44 +781,87 @@ class Canvas extends React.Component {
       this.store.relationships.unshift(genericRel);
       this.store.setShowRelPicker(true);
     }
+
   }
 
-  // Update store position from React Flow
-  onDragStopNodeHandler(node) {
-    const n = this.store.getNodeById(node.id);
-    if (n) {
-      n.position = node.position;
+  /**
+   * Update the store node position to its respective
+   * Flow node position.
+   * @param {object} flowNode React Flow node
+   */
+  onDragStopNodeHandler(flowNode) {
+    const node = this.store.getNodeById(flowNode.id);
+    if (node) {
+      node.position = flowNode.position;
     }
   }
 
+  /**
+   * Add an object to the specified object property
+   * for the selected node.
+   * @param {string} field node property
+   * @param {object} o object to add
+   */
   onClickAddGenericObjectHandler(field, o) {
     this.store.addGenericObject(field, o);
   }
 
+  /**
+   * Delete an object from the specified object property
+   * for the selected node.
+   * @param {string} field node property
+   * @param {string} key key of object to delete
+   */
   onClickDeleteGenericObjectHandler(field, key) {
     this.store.deleteGenericObject(field, key);
   }
 
+  /**
+   * Reset the STIX UI.
+   */
   onClickResetHandler() {
     this.store.reset();
   }
 
-  onClickSubmitHandler() {
-    this.store.submit();
+  /**
+   * Export the STIX bundle.
+   */
+  onClickExportHandler() {
+    this.store.stringifyBundle();
+    this.store.export();
   }
 
+  /**
+   * Force React Flow to rerender.
+   * @param {boolean} update whether to rerender
+   */
   setUpdateFlow(update) {
     this.store.setUpdateFlow(update);
   }
 
+  /**
+   * Set the mouse position
+   * @param {number} x 
+   * @param {number} y 
+   */
   setMousePosition(x, y) {
     this.store.setMousePosition(x, y);
   }
 
+  /**
+   * Generate a new node id.
+   * @param {string} prefix prefix of id
+   * @returns new node id
+   */
   generateNodeID(prefix) {
     return this.store.generateNodeID(prefix);
   }
 
+  /**
+   * Convert a node property and value into an event object.
+   * @param {string} property node property
+   * @param {*} value node value
+   */
   mutateOnEvent(property, value) {
     const event = {
       currentTarget: {
@@ -536,9 +873,17 @@ class Canvas extends React.Component {
     this.onChangeNodeHandler(event);
   }
 
+  /**
+   * Set the position of the specified node.
+   * @param {string} id node id
+   * @param {boolean} random whether to set at random or mouse position
+   * @returns 
+   */
   transition(id, random) {
     const canvas = document.getElementById('canvas');
     const node = this.store.getNodeById(id);
+
+    if (node.title == 'extension-definition') return;
 
     const calculate = (min, max) => Math.random() * (max - 100 - min) + min;
 
@@ -566,10 +911,11 @@ class Canvas extends React.Component {
     }
   }
 
+  
   render() {
     const { nodes, } = this.store;
     const { edges, } = this.store;
-    const sdos = this.store.getCustomSDOs();
+    const extensions = this.store.getExtensions();
 
     return (
       <div
@@ -598,14 +944,17 @@ class Canvas extends React.Component {
           onClickShowSchemaPasteHandler={this.onClickShowSchemaPasteHandler}
           onClickHideJsonHandler={this.onClickHideJsonHandler}
           onClickResetHandler={this.onClickResetHandler}
-          onClickSubmitHandler={this.onClickSubmitHandler}
-          onClickShowSDOPickerHandler={this.onClickShowSDOPickerHandler}
+          onClickExportHandler={this.onClickExportHandler}
+          onClickShowExtensionPickerHandler={this.onClickShowExtensionPickerHandler}
+          onClickShowLayoutPanelHandler={this.onClickShowLayoutPanelHandler}
           onClickShowImporterHandler={this.onClickShowImporterHandler}
           onChangeCreatorIDHandler={this.onChangeCreatorIDHandler}
           onClickGroupModeHandler={this.onClickGroupModeHandler}
           onClickSubmitGroupingHandler={this.onClickSubmitGroupingHandler}
+          onClickShowErrorHandler={this.onClickShowSubmissionErrorHandler}
           creatorID={this.store.creatorID}
           groupMode={this.store.groupMode}
+          errors={this.store.showSubmissionErrorBadge}
         />
 
         <BottomMenu
@@ -663,12 +1012,37 @@ class Canvas extends React.Component {
           onClickDeleteRelHandler={this.onClickDeleteRelHandler}
         />
 
-        <SDOEditor
+        <ExtensionEditor
           show={this.store.showEditor}
-          sdo={this.store.selectedSDO}
+          extension={this.store.selectedExt}
           onClickHideHandler={this.onClickHideEditorHandler}
-          onChangeSDOHandler={this.onChangeSDOHandler}
-          onClickDeleteHandler={this.onClickDeleteSDOHandler}
+          onChangeExtHandler={this.onChangeExtHandler}
+          
+          onChangeNodeHandler={this.onChangeNodeHandler}
+          onChangeDateHandler={this.onChangeDateHandler}
+          onClickArrayHandler={this.onClickArrayHandler}
+          onChangeListHandler={this.onChangeListHandler}
+          onChangeSliderHandler={this.onChangeSliderHandler}
+          onChangeCSVHandler={this.onChangeCSVHandler}
+          onClickBooleanHandler={this.onClickBooleanHandler}
+          onChangePhaseHandler={this.onChangePhaseHandler}
+          onClickRemovePhaseHander={this.onClickRemovePhaseHander}
+          onClickAddObjectHandler={this.onClickAddObjectHandler}
+          onClickDeleteERHandler={this.onClickDeleteERHandler}
+          onChangeERHandler={this.onChangeERHandler}
+          onClickDeletePropertyHandler={this.onClickDeletePropertyHandler}
+          onClickDeleteArrayObjectHandler={this.onClickDeleteArrayObjectHandler}
+          onChangeArrayObjectHandler={this.onChangeArrayObjectHandler}
+          onClickDeleteArrayObjectPropertyHandler={
+            this.onClickDeleteArrayObjectPropertyHandler
+          }
+          onChangeGenericObjectHandler={this.onChangeGenericObjectHandler}
+          onClickAddGenericObjectHandler={this.onClickAddGenericObjectHandler}
+          onClickDeleteGenericObjectHandler={
+            this.onClickDeleteGenericObjectHandler
+          }
+          onClickAddTextHandler={this.onClickAddTextHandler}
+          onClickDeleteHandler={this.onClickDeleteExtHandler}
         />
 
         <FileImporter
@@ -680,7 +1054,7 @@ class Canvas extends React.Component {
 
         <JsonViewer
           show={this.store.showJSON}
-          json={this.store.mutatedBundle}
+          json={this.store.bundleJSON}
           onClickHideHandler={this.onClickHideJsonHandler}
           onClickShowGrowlHandler={this.onClickShowGrowlHandler}
         />
@@ -711,11 +1085,18 @@ class Canvas extends React.Component {
           onClickShowRelDetailsHandler={this.onClickShowRelDetailsHandler}
         />
 
-        <SDOPicker
-          id="sdo-picker"
-          show={this.store.showSDOPicker}
-          sdos={sdos}
-          onClickHideHandler={this.onClickHideSDOPickerHandler}
+        <ExtensionPicker
+          id="extension-picker"
+          extensions={extensions}
+          show={this.store.showExtensionPicker}
+          onClickHideHandler={this.onClickHideExtensionPickerHandler}
+          onClickSelectExtHandler={this.onClickSelectExtHandler}
+        />
+
+        <LayoutPanel
+          id="layout-panel"
+          show={this.store.showLayoutPanel}          
+          onClickHideHandler={this.onClickHideLayoutPanelHandler}
           onClickSelectSDOHandler={this.onClickSelectSDOHandler}
         />
 
@@ -729,6 +1110,7 @@ class Canvas extends React.Component {
           error={this.store.failedCollection}
           show={this.store.showSubmissionError}
           onClickHideHandler={this.onClickHideSubmissionErrorHandler}
+          onClickNodeHandler={this.onClickErrorHandler}
         />
       </div>
     );

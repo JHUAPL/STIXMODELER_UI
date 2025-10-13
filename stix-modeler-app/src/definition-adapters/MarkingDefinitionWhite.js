@@ -17,11 +17,18 @@ class MarkingDefinitionWhite extends Base {
 
     super(common, def);
 
+    this.properties.definition_type = {
+      value: 'tlp',
+      type: 'string',
+      control: 'hidden'
+    }
     this.properties.definition = {
-      tlp: 'white',
+      value: {
+        tlp: 'white',
+      },
+      type: 'object',
+      control: 'hidden'
     };
-
-    this.properties.definition.control = 'hidden';
   }
 }
 

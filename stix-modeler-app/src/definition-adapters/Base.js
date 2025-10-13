@@ -5,10 +5,6 @@ const SPEC_VERSION = 2.1;
 
 const COMMON_RELS = [
   {
-    type: 'created-by', target: 'identity', x_exclusive: true, x_embed: 'created_by_ref',
-  },
-
-  {
     type: 'includes', target: 'grouping', x_embed: 'object_refs', x_reverse: true,
   },
   {
@@ -30,15 +26,17 @@ export class Base {
     const commonProps = common.properties;
     let defProps = {};
 
+    // Set required common properties
     common.required.map((item) => {
       if (commonProps[item]) {
         commonProps[item].required = true;
       }
     });
 
+    // Get type-specific properties
     if (def.allOf) {
       def.allOf.map((item) => {
-        if (item.hasOwnProperty('properties')) {
+        if ('properties' in item) {
           defProps = item.properties;
         }
       });
@@ -46,6 +44,7 @@ export class Base {
       defProps = def.properties;
     }
 
+    // Set required type-specific properties
     if (def.required) {
       def.required.map((item) => {
         if (defProps[item]) {
@@ -54,21 +53,35 @@ export class Base {
       });
     }
 
+    // Set properties for singleton from schema
     for (const item in def) {
       this[item] = def[item];
     }
 
+    // Add common relationships
     for (const rel of COMMON_RELS) {
       def.relationships.push(rel);
     }
+
+    // Only SROs and SCOs may have this property
+    if ("created_by_ref" in commonProps) {
+      def.relationships.push({
+        type: 'created-by', target: 'identity', x_exclusive: true, x_embed: 'created_by_ref',
+      }
+    )}
 
     const mergedProps = deepmerge(commonProps, defProps);
 
     this.handleFields(mergedProps);
 
     this.properties = mergedProps;
+    this.extensions = [];
   }
 
+  /**
+   * Set default values and control types for the specified properties
+   * @param {object} mergedProps properties (common and sdo-specific)
+   */
   handleFields(mergedProps) {
     // Start special handling of common object
     // properties.
@@ -82,19 +95,14 @@ export class Base {
       }
       ref = ref || '';
 
-      // set type for values with ref
-      if (ref.indexOf('timestamp.json') !== -1) {
-        mergedProps[prop].type = 'dts';
-      } else if (ref.indexOf('identifier.json') !== -1) {
-        mergedProps[prop].type = 'string';
-      } else if (ref.indexOf('dictionary.json') !== -1) {
-        mergedProps[prop].type = 'object';
+      if (ref.length) {
+        mergedProps[prop].type = ref;
       }
 
       // Set default blank values based on the prop
       // type.
       if (mergedProps[prop].type) {
-        mergedProps[prop].value = this.defaultValue(mergedProps[prop].type);
+        mergedProps[prop].value = this.defaultValue(mergedProps[prop]);
       }
     }
 
@@ -145,6 +153,68 @@ export class Base {
               phase_name: 'actions-on-objectives',
             }
           ],
+        },
+        {
+          label: 'MITRE ATT&CK',
+          value: 'mitre-attack',
+          phases: [
+            {
+              label: 'Reconnaissance',
+              phase_name: 'reconnaissance',
+            },
+            {
+              label: 'Resource Development',
+              phase_name: 'resource-development',
+            },
+            {
+              label: 'Initial Access',
+              phase_name: 'initial-access',
+            },
+            {
+              label: 'Execution',
+              phase_name: 'execution',
+            },
+            {
+              label: 'Persistence',
+              phase_name: 'persistence',
+            },
+            {
+              label: 'Privilege Escalation',
+              phase_name: 'privilege-escalation'
+            },
+            {
+              label: 'Defense Evasion',
+              phase_name: 'defense-evasion',
+            },
+            {
+              label: 'Credential Access',
+              phase_name: 'credential-access',
+            },
+            {
+              label: 'Discovery',
+              phase_name: 'discovery',
+            },
+            {
+              label: 'Lateral Movement',
+              phase_name: 'lateral-movement',
+            },
+            {
+              label: 'Collection',
+              phase_name: 'collection'
+            },
+            {
+              label: 'Command & Control (C2)',
+              phase_name: 'command-and-control',
+            },
+            {
+              label: 'Exfiltration',
+              phase_name: 'exfiltration',
+            },
+            {
+              label: 'Impact',
+              phase_name: 'impact'
+            }
+          ],
         }
       ];
     }
@@ -163,6 +233,17 @@ export class Base {
       mergedProps.description.control = 'textarea';
     }
 
+    if (mergedProps.hashes) {
+      mergedProps.hashes.control = 'killchain';
+      mergedProps.hashes.vocab = [
+        'MD5', 'SHA-1', 'SHA-256', 'SHA-512',
+        'SHA3-256', 'SHA3-512', 'SSDEEP'
+      ]
+      mergedProps.hashes.control = 'genericobject';
+      mergedProps.hashes.type = 'object';
+      mergedProps.hashes.value = {};
+    }
+
     /**
      * These are defaults that are to be set by the TI orchestrator
      */
@@ -174,11 +255,9 @@ export class Base {
       mergedProps.extensions.control = 'genericobject';
       mergedProps.extensions.type = 'object';
       mergedProps.extensions.value = {};
+      mergedProps.extensions.control = 'hidden';
     }
 
-    if (mergedProps.created_by_ref) {
-      mergedProps.created_by_ref.type = 'literal';
-    }
 
     if (mergedProps.lang) {
       mergedProps.lang.value = 'en';
@@ -189,100 +268,135 @@ export class Base {
     mergedProps.granular_markings.control = 'hidden';
   }
 
-  defaultValue(type) {
-    let def;
+  /**
+   * Get the default empty value for the specified
+   * property's type
+   * @param {object} def property
+   * @returns default value for property
+   */
+  defaultValue(def) {
+    let type = def.type;
+    let value;
 
-    // ignores type path
-    if (type.includes('.json')) {
-      type = type.split('/').slice(-1)[0];
-    }
-
+    type = type.split('/').slice(-1)[0];
+    type = type.split('.json')[0];
+    def.type = type;
+    
     switch (type) {
-      case 'string':
-        def = '';
+      case 'boolean':
+        value = false;
         break;
-      case 'dts':
-        def = moment().utc(true).format('YYYY-MM-DD[T]HH:mm:ss.SSS[Z]');
+      case 'dictionary':
+      case 'external-reference':
+      case 'hashes':
+      case 'hashes-type':
+      case 'object':
+      case 'observable-container':
+        value = {};
+        def.type = 'object';
         break;
+      case 'float':
       case 'integer':
-        def = 0;
+      case 'number':
+        value = 0;
+        def.type = 'number';
+        break;
+      case 'binary':
+      case 'hex':
+      case 'identifier':
+      case 'open-vocab':
+      case 'string':
+      case 'url-regex':
+        value = "";
+        def.type = 'string';
         break;
       case 'array':
-        def = [];
+      case 'list':
+        def.type = 'array';
+      case 'enum':
+      case 'kill-chain-phase':
+        value = [];
         break;
-      case 'object':
-        def = {};
+      case 'timestamp':
+        value = moment().utc(true).format('YYYY-MM-DD[T]HH:mm:ss.SSS[Z]');
         break;
-      case 'boolean':
-        def = false;
+      default:
         break;
     }
 
-    return def;
+    return value;
   }
 
-  flattenExtensionProperties(def) {
-    const properties = {};
-    let tmp = {};
-    if ('properties' in def) {
-      tmp = this.flattenExtensionProperties(def.properties);
-      for (const [key, value] of Object.entries(tmp)) {
-        properties[key] = value;
-      }
-    } else if ('extensions' in def) {
-      tmp = this.flattenExtensionProperties(def.extensions);
-      for (const [key, value] of Object.entries(tmp)) {
-        properties[key] = value;
-      }
-    } else {
-      for (const [key, value] of Object.entries(def)) {
-        if (key.includes('extension-definition')) {
-          tmp = this.flattenExtensionProperties(value);
-          for (const [key, value] of Object.entries(tmp)) {
-            properties[key] = value;
-          }
-        } else {
-          properties[key] = value;
-        }
-      }
-    }
-    return properties;
-  }
-
-  mergeExtension(def, extDef) {
-    const { properties, } = this;
-    let defProps;
-    if (def.allOf) {
-      def.allOf.map((item) => {
+  /**
+   * Flatten nested extension properties
+   * (Enables resiliency for non-standard schema formats)
+   * @param {*} schema 
+   * @returns dictionary of properties
+   */
+  flattenExtensionProperties(schema) {
+    let extProps = {}
+    let properties;
+    if (schema.allOf) {
+      schema.allOf.map((item) => {
         if ('properties' in item) {
-          defProps = this.flattenExtensionProperties(item.properties);
+          properties = item.properties
         }
       });
     } else {
-      defProps = this.flattenExtensionProperties(def.properties);
+      properties = schema.properties;
     }
 
-    if ('extension_type' in defProps) {
-      delete defProps.extension_type;
+    // In case of nested property extensions
+    let found = true;
+    while (found) {
+      found = false;
+      for (const [key, value] of Object.entries(properties)) {
+        if (key == 'properties' || key == 'extensions' || 
+            key.includes("extension-definition")) {
+              properties = value;
+              found = true;
+              break;
+        }
+      }
     }
+
+    for (const [prop, def] of Object.entries(properties)) {
+      if (prop != 'extension_type') {
+        const value = this.defaultValue(def);
+        extProps[prop] = def;
+        def.value = value;
+      }
+    }
+
+    return extProps;
+  }
+
+
+  /**
+   * Merge properties from a property-extension schema into the
+   * SDO singleton
+   * @param {*} def schema of extended properties
+   * @param {*} extDef extension definition node
+   */
+  mergeExtension(def, extDef) {
+    const { properties, } = this;
 
     if (!('extensions' in properties)) {
       this.properties.extensions = {};
       this.properties.extensions.value = {};
-      this.properties.extensions.type = 'object';
-      this.properties.extensions.control = 'hidden';
     }
 
-    const props = { extension_type: 'property-extension', };
-    for (const prop in defProps) {
-      if ((prop !== 'extension_type') && (defProps[prop].type)) {
-        const value = this.defaultValue(defProps[prop].type);
-        props[prop] = value;
-        defProps[prop].value = value;
-      }
-    }
-    const mergedProps = deepmerge(properties, defProps);
+    // If this object uses extensions (such as network-traffic),
+    // do not allow further editing via gui
+    this.properties.extensions.type = 'object';
+    this.properties.extensions.control = 'hidden';
+
+    const extProps = this.flattenExtensionProperties(def);
+    // Only toplevel-property-extensions can have extension_properties field,
+    // but this useful, so hold onto it
+    extDef.extension_properties = Object.keys(extProps);
+    const mergedProps = deepmerge(properties, extProps);
     this.properties = mergedProps;
-    this.properties.extensions.value[extDef.id] = props;
+    this.extensions.push(extDef.uiid);
   }
 }

@@ -17,11 +17,19 @@ class MarkingDefinitionGreen extends Base {
 
     super(common, def);
 
+    this.properties.definition_type = {
+      value: 'tlp',
+      type: 'string',
+      control: 'hidden'
+    }
     this.properties.definition = {
-      tlp: 'green',
+      value: {
+        tlp: 'green',
+      },
+      type: 'object',
+      control: 'hidden'
     };
 
-    this.properties.definition.control = 'hidden';
   }
 }
 

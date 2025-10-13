@@ -1,7 +1,16 @@
-@import "../defaults";
+@use "../defaults";
+
+.header {
+    padding: 20px;
+    font-size: 30px;
+    height: 40px;
+    background-color: defaults.$lt-gray-bg;
+}
+
 
 .submission-error {
-    .header {
+
+    .container-header {
         padding: 10px;
         font-size: 18px;
 
@@ -15,8 +24,19 @@
         padding-left: 55px;
 
         span {
-            color: $default-active-bg;
+            color: defaults.$default-active-bg;
             padding-right: 6px;
         }
     }
+
+    .submission-item {
+        border: 1px black solid;
+    }
+
+    .submission-item:hover {
+        background-color: beige;
+    }
+
+    overflow-y: scroll;
+    
 }

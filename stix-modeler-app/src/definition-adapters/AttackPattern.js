@@ -11,6 +11,7 @@ class AttackPattern extends Base {
       prefix: 'attack-pattern--',
       active: true,
       relationships: [
+        { type: 'delivers', target: 'malware', },
         { type: 'targets', target: 'identity', },
         { type: 'targets', target: 'location', },
         { type: 'targets', target: 'vulnerability', },

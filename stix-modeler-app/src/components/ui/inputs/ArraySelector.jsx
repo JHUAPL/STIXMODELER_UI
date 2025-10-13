@@ -10,8 +10,6 @@ class ArraySelector extends React.Component {
     super(props);
   }
 
-  componentDidMount() {}
-
   onClickHandler(field, value) {
     this.props.onClickHandler(field, value);
   }
@@ -19,8 +17,11 @@ class ArraySelector extends React.Component {
   render() {
     const items = this.props.vocab ? this.props.vocab : [];
     const { field, } = this.props;
-    const { value, } = this.props;
+    const { value, } = this.props ?? [];
     const { description, } = this.props;
+    const { required, } = this.props;
+    const invalid = required && !value.length;
+    const warning = invalid? (<div className='required-warning'>This field is required</div>) : "";
 
     let cls = classNames({
       'array-container-item': true,
@@ -40,7 +41,10 @@ class ArraySelector extends React.Component {
           </span>
           <Tooltip id={`${field}-tooltip`} />
         </div>
-        <div className="array-container-body">
+        <div className={classNames({
+          "array-container-body": true,
+          "invalid":  invalid
+        })}>
           {items.map((item, i) => {
             if (value && value.indexOf(item) > -1) {
               cls = classNames({
@@ -63,6 +67,7 @@ class ArraySelector extends React.Component {
             );
           })}
         </div>
+        {warning}
       </div>
     );
   }

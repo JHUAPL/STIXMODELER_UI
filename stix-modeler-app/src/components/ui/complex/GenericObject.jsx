@@ -2,6 +2,7 @@ import React from 'react';
 import { observer } from 'mobx-react';
 import { Tooltip } from 'react-tooltip';
 import { v4 as uuid } from 'uuid';
+import classNames from 'classnames';
 import Text from '../inputs/Text';
 
 import './genericobject.scss';
@@ -10,19 +11,16 @@ class GenericObject extends React.Component {
   constructor(props) {
     super(props);
 
+    this.onChangeSelectHandler = this.onChangeSelectHandler.bind(this);
     this.onChangeInputHandler = this.onChangeInputHandler.bind(this);
     this.onClickAddObjectHandler = this.onClickAddObjectHandler.bind(this);
     this.onClickDeleteHandler = this.onClickDeleteHandler.bind(this);
     this.onClickCreateBlankHandler = this.onClickCreateBlankHandler.bind(this);
 
     this.state = {
-      key: '',
+      key: this.props.vocab? this.props.vocab[0] : '',
       value: '',
     };
-  }
-
-  componentDidMount() {
-
   }
 
   onChangeInputHandler(event) {
@@ -33,8 +31,16 @@ class GenericObject extends React.Component {
     });
   }
 
+  onChangeSelectHandler(event) {
+    event.preventDefault();
+    const key = document.getElementById(`select-${this.props.field}`).value;
+    this.setState({
+      "key": key
+    });
+  }
+
   onClickDeleteHandler(select, idx) {
-    this.props.onClickDeletePropertyHandler(select, idx);
+    this.props.onClickDeleteObjectHandler(select, idx);
   }
 
   onClickCreateBlankHandler() {
@@ -54,9 +60,13 @@ class GenericObject extends React.Component {
 
   render() {
     const { field, } = this.props;
-    const value = this.props.value ? this.props.value : [];
+    const { vocab, } = this.props;
+    const value = this.props.value ?? {};
     const { description, } = this.props;
+    const {required, } = this.props;
     const rows = [];
+    const invalid = required && !Object.keys(value).length;
+    const warning = invalid? (<div className='required-warning'>This field is required</div>) : "";
 
     for (const key in value) {
       rows.push(
@@ -65,10 +75,29 @@ class GenericObject extends React.Component {
           v={value[key]}
           k={key}
           field={field}
-          onClickDeleteHandler={this.props.onClickDeleteObjectHandler}
+          onClickDeleteHandler={this.onClickDeleteHandler}
         />
       );
     }
+
+    let selector;
+    if (vocab && vocab.length) {
+      selector = (
+        <select id={`select-${field}`} defaultValue={vocab[0]} onChange={this.onChangeSelectHandler}>
+        {vocab.map((key) => (
+          <option id={key} value={key}>
+            {key}
+          </option>
+        ))}
+       </select>
+      );
+    } else {
+      selector = (
+        <Text name="key" value={this.state.key} onChange={this.onChangeInputHandler} />
+      );
+    }
+
+
 
     return (
       <div className="go-container">
@@ -83,11 +112,14 @@ class GenericObject extends React.Component {
           </span>
           <Tooltip id={`${field}-tooltip`} />
         </div>
-        <div className="go-body">
+        <div className={classNames({
+          "go-body": true,
+          "invalid":  invalid
+        })}>
 
           <div className="go-block-input">
             <div className="input">
-              <Text name="key" value={this.state.key} onChange={this.onChangeInputHandler} />
+              {selector}
             </div>
             <div className="input">
               <Text name="value" value={this.state.value} onChange={this.onChangeInputHandler} />
@@ -99,6 +131,7 @@ class GenericObject extends React.Component {
 
           {rows}
         </div>
+        {warning}
       </div>
     );
   }

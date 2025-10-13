@@ -4,7 +4,7 @@ import { toJS } from 'mobx';
 import { Tooltip } from 'react-tooltip';
 import Panel from '../ui/panel/Panel';
 import Text from '../ui/inputs/Text';
-import Images from '../../imgs/Images';
+import Images from '../../util/Images';
 
 import './RelationshipDetails.scss';
 

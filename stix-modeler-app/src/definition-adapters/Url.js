@@ -1,4 +1,3 @@
-import _cloneDeep from 'lodash/cloneDeep';
 import deepmerge from 'deepmerge';
 import common from '../definitions/observable-common.json';
 import rawDefinition from '../definitions/url.json';

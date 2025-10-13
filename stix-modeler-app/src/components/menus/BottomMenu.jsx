@@ -1,9 +1,8 @@
-/* eslint-disable react/prefer-stateless-function */
 import React from 'react';
 import { observer } from 'mobx-react';
 
 import MenuItem from './MenuItem';
-import Images from '../../imgs/Images';
+import Images from '../../util/Images';
 
 import './BottomMenu.scss';
 

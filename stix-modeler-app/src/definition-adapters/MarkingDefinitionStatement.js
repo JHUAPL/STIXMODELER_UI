@@ -17,6 +17,11 @@ class MarkingDefinitionStatement extends Base {
 
     super(common, def);
 
+    this.properties.definition_type = {
+      value: 'statement',
+      type: 'string',
+      control: 'hidden'
+    };
     this.properties.definition = {};
     this.properties.definition.value = {};
     this.properties.definition.control = 'genericobject';

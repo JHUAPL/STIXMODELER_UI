@@ -9,21 +9,18 @@ class CSVInput extends React.Component {
     super(props);
   }
 
-  componentDidMount() {
-
-  }
-
   onClickHandler(field, value) {
     this.props.onClickHandler(field, value);
   }
 
   render() {
-    const value = this.props.value ? this.props.value.join() : '';
+    const value = this.props.value ?? "";
 
     return (
       <Text
         name={this.props.name}
         value={value}
+        required={this.props.required}
         onChange={this.props.onChangeHandler}
       />
     );

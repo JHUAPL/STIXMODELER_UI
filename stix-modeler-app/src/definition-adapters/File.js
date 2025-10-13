@@ -135,8 +135,6 @@ class File extends Base {
     this.properties.content_ref.control = 'hidden';
     this.properties.parent_directory_ref.control = 'hidden';
     this.properties.contains_refs.control = 'hidden';
-    this.properties.hashes.control = 'genericobject';
-    this.properties.hashes.type = 'object';
 
     this.properties.magic_number_hex.type = 'string';
     this.properties.size.type = 'string';

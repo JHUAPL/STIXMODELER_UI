@@ -17,9 +17,6 @@ class Certificate extends Base {
 
     super(common, def);
 
-    this.properties.hashes.value = {};
-    this.properties.hashes.control = 'genericobject';
-
     this.properties.x509_v3_extensions.type = 'string';
   }
 }

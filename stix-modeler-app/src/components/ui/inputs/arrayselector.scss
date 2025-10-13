@@ -1,4 +1,4 @@
-@import '../../../defaults';
+@use '../../../defaults';
 
 .array-container {
   padding-left: 20px;
@@ -6,7 +6,7 @@
 
   .array-container-header {
     font-weight: bold;
-    color: $default-active-bg;
+    color: defaults.$default-active-bg;
     padding-bottom: 3px;
 
     span {
@@ -21,12 +21,12 @@
   }
 
   .remove {
-    color: $error-font;
+    color: defaults.$error-font;
   }
 
   .add {
     padding-top: 15px;
-    color: $default-active-bg;
+    color: defaults.$default-active-bg;
   }
 
   .array-container-input {
@@ -51,7 +51,7 @@
   .array-container-body {
     height: 100px;
     overflow: auto;
-    border: 1px solid $standard-border-color;
+    border: 1px solid defaults.$standard-border-color;
 
     .array-container-item {
       cursor: pointer;
@@ -60,11 +60,11 @@
     }
 
     .array-container-selected {
-      background-color: $default-active-bg;
+      background-color: defaults.$default-active-bg;
     }
 
     .array-container-item:hover {
-      background-color: $light-font-0;
+      background-color: defaults.$light-font-0;
     }
 
     .array-block-input {
@@ -83,7 +83,7 @@
 
         span {
           cursor: pointer;
-          color: $default-active-bg;
+          color: defaults.$default-active-bg;
           padding-left: 5px;
           padding-top: 40%;
         }

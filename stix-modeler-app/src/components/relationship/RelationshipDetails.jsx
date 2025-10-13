@@ -4,15 +4,16 @@ import { Tooltip } from 'react-tooltip';
 import Panel from '../ui/panel/Panel';
 import Text from '../ui/inputs/Text';
 import Boolean from '../ui/inputs/Boolean';
-import Images from '../../imgs/Images';
+import Images from '../../util/Images';
 
+import '../details.scss';
 import './RelationshipDetails.scss';
 
 class RelationshipDetails extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      type: 'relates to',
+      type: 'related-to',
       x_exclusive: false,
     };
     this.onSubmitHandler = this.onSubmitHandler.bind(this);
@@ -45,7 +46,7 @@ class RelationshipDetails extends React.Component {
 
   reset() {
     this.setState({
-      type: 'relates to',
+      type: 'related-to',
       x_exclusive: false,
     });
   }

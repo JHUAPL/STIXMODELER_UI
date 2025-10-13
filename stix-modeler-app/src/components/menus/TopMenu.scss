@@ -1,4 +1,4 @@
-@import '../../defaults';
+@use '../../defaults';
 
 .top-menu {
   position: fixed;
@@ -9,33 +9,33 @@
     display: flex;
     flex-direction: row;
 
-    .menu-item-small {
-      width: 20px;
-      height: 20px;
-    }
-
-    .menu-item-medium {
-      width: 25px;
-      height: 20px;
-    }
-
-    .schema-paste-btn {
+    .menu-item {
       border-radius: 5px;
       cursor: pointer;
-      padding: 5px 4px 5px 11px;
-      margin-left: 10px;
+      padding: 10px 8px 0px 8px;
       color: #fff;
-      font-weight: bold;
-      background-color: $default-active-bg;
+      background-color: defaults.$default-active-bg;
+      margin-left: 10px;
+      text-align: center;
+
+      .i {
+        width: 20px;
+        vertical-align: middle;
+        line-height: 0;
+        overflow: hidden;
+      }
+    }
+
+    .menu-item:hover {
+      background-color: #2f689d;
     }
 
     .grouping-btn {
       border-radius: 5px;
       cursor: pointer;
-      padding: 5px 11px 5px 11px;
       color: #fff;
       font-weight: bold;
-      background-color: $default-active-bg;
+      background-color: defaults.$default-active-bg;
       width: 55px;
       height: 80%;
     }
@@ -43,7 +43,6 @@
     .dropdown {
       position: relative;
       display: inline-block;
-      margin-left: 10px;
     }
     
     .dropdown-content {
@@ -70,23 +69,7 @@
     
     
     .cancel-btn:hover {
-      background-color: $error-font;
-    }
-
-    .sdos-btn {
-      border-radius: 5px;
-      cursor: pointer;
-      padding: 5px 11px 5px 11px;
-      color: #fff;
-      font-weight: bold;
-      background-color: $default-active-bg;
-      margin-left: 10px;
-
-      .i {
-        width: 20px;
-        vertical-align: middle;
-        font-size: 16px;
-      }
+      background-color: defaults.$error-font;
     }
 
     .ctr-input {
@@ -94,40 +77,22 @@
      width: 500px;
     }
 
-    .json-btn {
-      border-radius: 5px;
-      cursor: pointer;
-      padding: 5px 4px 5px 8px;
-      margin-left: 10px;
-      color: #fff;
-      font-weight: bold;
-      background-color: $default-active-bg;
-    }
 
-    .json-paste-btn {
-      border-radius: 5px;
-      cursor: pointer;
-      padding: 5px 4px 5px 8px;
-      margin-left: 5px;
-      color: #fff;
-      font-weight: bold;
-      background-color: $default-active-bg;
+    .reset-btn:hover {
+      background-color: defaults.$error-font;
     }
+  }
 
-    .reset-btn {
-      border-radius: 5px;
-      cursor: pointer;
-      padding: 5px 11px 5px 11px;
-      color: #fff;
-      font-weight: bold;
-      background-color: $default-active-bg;
-      margin-left: 10px;
-
-      .i {
-        width: 20px;
-        vertical-align: middle;
-        font-size: 16px;
-      }
-    }
+  .badge {
+    position: absolute;
+    top: -3px;
+    right: -3px;
+    width: 10px;
+    height: 10px;
+    background-color: red;
+    border-radius: 50%;   
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 }

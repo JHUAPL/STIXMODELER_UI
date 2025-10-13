@@ -1,35 +1,36 @@
 import React from 'react';
 import { Handle, Position } from 'reactflow';
-import Images from '../../imgs/Images';
+import Images from '../../util/Images';
+import classNames from 'classnames';
 
 import './FlowNode.scss';
 
 export default class FlowNode extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      selected: false,
-    };
   }
 
   render() {
     const { node, } = this.props.data;
     let display = node.id.split('--')[0];
-    const border = node.selected ? 'solid 1px blue' : '';
+
+    let cls = classNames({
+      'node-item': true,
+      'selected': node.selected,
+    });
+
+    let labelCls = classNames({
+      "node-label": true,
+    })
+
     if (node.properties.name && node.properties.name.value) {
       display = node.properties.name.value;
     }
     return (
       <>
-        <div
+        <div className={cls}
           style={{
-            height: '100%',
-            width: '100%',
-            position: 'absolute',
-            backgroundSize: 'contain',
             backgroundImage: `url(${node.customImg ? node.customImg : Images.getImage(node.img)})`,
-            backgroundRepeat: 'no-repeat',
-            border: `${border}`,
           }}
         />
         <Handle
@@ -63,7 +64,7 @@ export default class FlowNode extends React.Component {
           isConnectable={this.props.isConnectable}
         />
 
-        <div className="nodeLabel">
+        <div className={labelCls}>
           {display}
         </div>
       </>

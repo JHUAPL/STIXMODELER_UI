@@ -1,10 +1,10 @@
-@import '../../../defaults';
+@use '../../../defaults';
 
 .boolean {
     display: flex;
     flex-direction: row;
     line-height: 30px;
-    border: 1px solid $standard-border-color;
+    border: 1px solid defaults.$standard-border-color;
     width: 99%;
 
     div {
@@ -14,7 +14,7 @@
     }
 
     .selected {
-        background-color: $default-active-bg;
+        background-color: defaults.$default-active-bg;
     }
 
 }

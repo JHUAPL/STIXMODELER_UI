@@ -1,6 +1,6 @@
 {
   "$id": "http://raw.githubusercontent.com/oasis-open/cti-stix2-json-schemas/stix2.1/schemas/observables/network-traffic.json",
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "network-traffic",
   "description": "The Network Traffic Object represents arbitrary network traffic that originates from a source and is addressed to a destination.",
   "type": "object",
@@ -78,6 +78,7 @@
           "description": "Specifies the number of packets sent destination to the source."
         },
         "ipfix": {
+          "description": "Specifies any IP Flow Information Export (IPFIX) data for the traffic.",
           "allOf": [{ "$ref": "../common/dictionary.json" }],
           "patternProperties": {
             "^[a-zA-Z0-9_-]{0,250}$": {
@@ -197,7 +198,10 @@
               "description": "Specifies all of the HTTP header fields that may be found in the HTTP client request, as a dictionary.",
               "patternProperties": {
                 "^.+$": {
-                  "type": "string"
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
                 }
               },
               "additionalProperties": false

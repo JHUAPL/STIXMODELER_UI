@@ -17,7 +17,7 @@ import GenericObject from './ui/complex/GenericObject';
 import ConfirmTextarea from './ui/complex/ConfirmTextarea';
 import ObjectArray from './ui/complex/ObjectArray';
 
-import Images from '../imgs/Images';
+import Images from '../util/Images';
 
 import './details.scss';
 
@@ -57,8 +57,9 @@ class Details extends React.Component {
     }
 
     for (const prop in props) {
+      const cls = 'item-header';
       const header = (
-        <div className="item-header">
+        <div className={cls}>
           {prop}
           <span
             data-tooltip-id={`${prop}-tooltip`}
@@ -90,13 +91,14 @@ class Details extends React.Component {
                   <Text
                     name={prop}
                     value={props[prop].value}
+                    required={props[prop].required}
                     onChange={this.onChangeHandler}
                   />
                 </div>
               </div>
             );
             break;
-          case 'dts':
+          case 'timestamp':
             control = (
               <div className="item" key={prop}>
                 {header}
@@ -104,7 +106,9 @@ class Details extends React.Component {
                   <DateTime
                     name={prop}
                     selected={props[prop].value}
-                    onChange={this.onChangeDateHandler}
+                    required={props[prop].required}
+                    onTextChange={this.onChangeHandler}
+                    onDateChange={this.onChangeDateHandler}
                   />
                 </div>
               </div>
@@ -119,6 +123,7 @@ class Details extends React.Component {
                   field={prop}
                   value={props[prop].value}
                   description={props[prop].description}
+                  required={props[prop].required}
                   onClickHandler={this.props.onClickArrayHandler}
                 />
               );
@@ -128,9 +133,9 @@ class Details extends React.Component {
               if (Array.isArray(refField)) {
                 refField = refField[0];
               }
-              const ref = refField.$ref ? refField.$ref : refField.type;
+              const ref = refField.$ref ?? refField.type;
 
-              if (ref === '../common/dictionary.json' || ref === 'object') {
+              if (ref.includes('dictionary.json') || ref === 'object') {
                 control = (
                   <ObjectArray
                     node={node}
@@ -138,6 +143,7 @@ class Details extends React.Component {
                     field={prop}
                     value={props[prop].value}
                     description={props[prop].description}
+                    required={props[prop].required}
                     onClickAddObjectHandler={this.props.onClickAddObjectHandler}
                     onChangeObjectHandler={this.props.onChangeArrayObjectHandler}
                     onClickDeleteArrayObjectHandler={this.props.onClickDeleteArrayObjectHandler}
@@ -159,13 +165,14 @@ class Details extends React.Component {
                   <Boolean
                     name={prop}
                     selected={props[prop].value}
+                    required={props[prop].required}
                     onClick={this.props.onClickBooleanHandler}
                   />
                 </div>
               </div>
             );
             break;
-          case '../common/dictionary.json':
+          case 'dictionary':
           case 'object':
             control = (
               <GenericObject
@@ -174,6 +181,7 @@ class Details extends React.Component {
                 description={props[prop].description}
                 key={uuid()}
                 field={prop}
+                required={props[prop].required}
                 onClickAddObjectHandler={
                   this.props.onClickAddGenericObjectHandler
                 }
@@ -189,7 +197,7 @@ class Details extends React.Component {
 
       if (props[prop].$ref && !props[prop].control) {
         switch (props[prop].$ref) {
-          case '../common/identifier.json':
+          case 'identifier':
             control = (
               <div className="item" key={prop}>
                 {header}
@@ -197,6 +205,7 @@ class Details extends React.Component {
                   <Text
                     name={prop}
                     value={props[prop].value}
+                    required={props[prop].required}
                     onChange={this.onChangeHandler}
                   />
                 </div>
@@ -218,6 +227,7 @@ class Details extends React.Component {
                 <Slider
                   value={props[prop].value}
                   field={prop}
+                  required={props[prop].required}
                   onChangeHandler={this.props.onChangeSliderHandler}
                 />
               </div>
@@ -233,6 +243,7 @@ class Details extends React.Component {
                   key={prop}
                   name={prop}
                   value={props[prop].value}
+                  required={props[prop].required}
                   onChangeHandler={this.props.onChangeCSVHandler}
                 />
               </div>
@@ -248,6 +259,7 @@ class Details extends React.Component {
               field={prop}
               value={props[prop].value}
               description={props[prop].description}
+              required={props[prop].required}
               onChangeHandler={this.props.onChangePhaseHandler}
               onClickRemoveHandler={this.props.onClickRemovePhaseHander}
             />
@@ -260,7 +272,9 @@ class Details extends React.Component {
               key={prop}
               field={prop}
               value={props[prop].value}
+              prefix="node"
               description={props[prop].description}
+              required={props[prop].required}
               onClickAddObjectHandler={this.props.onClickAddObjectHandler}
               onChangeERHandler={this.props.onChangeERHandler}
               onClickDeleteERHandler={this.props.onClickDeleteERHandler}
@@ -278,6 +292,7 @@ class Details extends React.Component {
               field={prop}
               value={props[prop].value}
               description={props[prop].description}
+              required={props[prop].required}
               onClickHandler={this.props.onClickArrayHandler}
             />
           );
@@ -290,6 +305,7 @@ class Details extends React.Component {
                 <TextArea
                   name={prop}
                   value={props[prop].value}
+                  required={props[prop].required}
                   onChange={this.onChangeHandler}
                 />
               </div>
@@ -305,6 +321,7 @@ class Details extends React.Component {
                   key={prop}
                   name={prop}
                   value={props[prop].value}
+                  required={props[prop].required}
                   onChangeHandler={this.props.onChangeCSVHandler}
                 />
               </div>
@@ -316,13 +333,15 @@ class Details extends React.Component {
             <GenericObject
               name={prop}
               value={props[prop].value}
+              vocab={props[prop].vocab}
               description={props[prop].description}
               key={uuid()}
               field={prop}
+              required={props[prop].required}
               onClickAddObjectHandler={
                 this.props.onClickAddGenericObjectHandler
               }
-              onClickDeleteArrayObjectHandler={
+              onClickDeleteObjectHandler={
                 this.props.onClickDeleteGenericObjectHandler
               }
               onChangeHandler={this.props.onChangeGenericObjectHandler}
@@ -337,12 +356,56 @@ class Details extends React.Component {
               description={props[prop].description}
               key={uuid()}
               field={prop}
+              required={props[prop].required}
               onClickAddTextHandler={this.props.onClickAddTextHandler}
             />
           );
           break;
       }
 
+      details.push(control);
+    }
+
+    const unknownProperties = Object.keys(props).filter(prop => props[prop].type === 'unknown');
+    if (unknownProperties.length) {
+      const msg = `Import extension schema(s) to enable modification`
+      const header = (
+        <div className="item-header">
+          Unknown Properties
+          <span
+            data-tooltip-id="unknown-tooltip"
+            className="material-icons"
+            data-tooltip-content={msg}
+          >
+            info
+          </span>
+          <Tooltip id="unknown-tooltip" />
+        </div>
+      );
+
+      const propItems = [];
+      const maxLength = 50;
+      for (const prop of unknownProperties) {
+        let value = props[prop].value;
+        value = (typeof value == 'object')? JSON.stringify(value, null, 2) : String(value);
+        value = (value.length > maxLength)? `${value.substring(0, maxLength)}...` : value;
+
+        propItems.push(
+          <div className="item-value">
+            <span className="unknown-header">{"\u2043"} {prop} </span>
+            <span className='unknown-value'>{value}</span>
+          </div>
+        );
+      }
+
+      let control = (
+        <div className="item" key="unknown">
+          {header}
+          <ul className="item-value" id='unknown-properties'>
+            {propItems}
+          </ul>
+        </div>
+      );
       details.push(control);
     }
 

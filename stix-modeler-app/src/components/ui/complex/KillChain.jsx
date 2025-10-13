@@ -1,6 +1,7 @@
 import React from 'react';
 import { observer } from 'mobx-react';
 import { Tooltip } from 'react-tooltip';
+import classNames from 'classnames';
 
 import './killchain.scss';
 
@@ -10,10 +11,6 @@ class KillChain extends React.Component {
 
     this.onChangePhaseHandler = this.onChangePhaseHandler.bind(this);
     this.populatePhase = this.populatePhase.bind(this);
-  }
-
-  componentDidMount() {
-
   }
 
   onChangePhaseHandler(event) {
@@ -64,6 +61,9 @@ class KillChain extends React.Component {
     const { field, } = this.props;
     const value = this.props.value ? this.props.value : [];
     const { description, } = this.props;
+    const {required, } = this.props;
+    const invalid = required && !value.length;
+    const warning = invalid? (<div className='required-warning'>This field is required</div>) : "";
 
     const kcName = `kc-name-${this.props.node.id}`;
     const phaseName = `phase-${this.props.node.id}`;
@@ -81,7 +81,10 @@ class KillChain extends React.Component {
           </span>
           <Tooltip id={`${field}-tooltip`} />
         </div>
-        <div className="kill-chain-body">
+        <div className={classNames({
+          "kill-chain-body": true,
+          "invalid":  invalid
+        })}>
           <div className="kill-chain-options">
             <select id={kcName} onChange={this.populatePhase}>
               <option value={0}> -- Select Kill Chain -- </option>
@@ -112,12 +115,13 @@ class KillChain extends React.Component {
                               {' '}
                               {p.phase_name}
                               {' '}
-                              <span onClick={() => this.props.onClickRemoveHandler(field, p)} className="material-icons">highlight_off</span>
+                              <span onClick={() => this.props.onClickRemoveHandler(field, i)} className="material-icons">highlight_off</span>
                             </div>
                           </div>
                         ))
                     }
         </div>
+        {warning}
       </div>
     );
   }

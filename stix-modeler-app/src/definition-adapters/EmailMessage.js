@@ -42,7 +42,7 @@ class EmailMessage extends Base {
 
     super(common, def);
 
-    this.properties.date.type = 'dts';
+    this.properties.date.type = 'timestamp';
     this.properties.additional_header_fields.value = {};
 
     this.properties.from_ref.control = 'hidden';

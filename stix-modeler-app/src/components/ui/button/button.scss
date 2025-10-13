@@ -1,4 +1,4 @@
-@import '../../../defaults';
+@use '../../../defaults';
 
 button:focus {
     outline: none;
@@ -8,8 +8,8 @@ button.def {
     width: auto;
     min-width: 130px;
     height: 30px;
-    color: $light-font-0;
-    font-family: $default-font-family;
+    color: defaults.$light-font-0;
+    font-family: defaults.$default-font-family;
     font-size: 14px;
     border-color: transparent;
     cursor: pointer;
@@ -21,7 +21,7 @@ button.def {
 
 button.disabled {
     background-color: rgba(128,128,128,.8) !important;
-    color: $gray-font-0 !important;
+    color: defaults.$gray-font-0 !important;
     cursor: auto;
 }
 

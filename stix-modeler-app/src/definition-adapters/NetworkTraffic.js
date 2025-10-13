@@ -23,6 +23,57 @@ class NetworkTraffic extends Base {
         {
           type: 'dst-payload', target: 'artifact', x_exclusive: true, x_embed: 'dst_payload_ref',
         },
+
+        {
+          type: 'source', target: 'observable', 'sub-target': 'ipv4-addr', x_exclusive: true, x_embed: 'src_ref',
+        },
+        {
+          type: 'source', target: 'ipv4-addr', x_exclusive: true, x_embed: 'src_ref',
+        },
+        {
+          type: 'source', target: 'observable', 'sub-target': 'ipv6-addr', x_exclusive: true, x_embed: 'src_ref',
+        },
+        {
+          type: 'source', target: 'ipv6-addr', x_exclusive: true, x_embed: 'src_ref',
+        },
+        {
+          type: 'source', target: 'observable', 'sub-target': 'mac-addr', x_exclusive: true, x_embed: 'src_ref',
+        },
+        {
+          type: 'source', target: 'mac-addr', x_exclusive: true, x_embed: 'src_ref',
+        },
+        {
+          type: 'source', target: 'observable', 'sub-target': 'domain-name', x_exclusive: true, x_embed: 'src_ref',
+        },
+        {
+          type: 'source', target: 'domain-name', x_exclusive: true, x_embed: 'src_ref',
+        },
+
+        {
+          type: 'destination', target: 'observable', 'sub-target': 'ipv4-addr', x_exclusive: true, x_embed: 'dst_ref',
+        },
+        {
+          type: 'destination', target: 'ipv4-addr', x_exclusive: true, x_embed: 'dst_ref',
+        },
+        {
+          type: 'destination', target: 'observable', 'sub-target': 'ipv6-addr', x_exclusive: true, x_embed: 'dst_ref',
+        },
+        {
+          type: 'destination', target: 'ipv6-addr', x_exclusive: true, x_embed: 'dst_ref',
+        },
+        {
+          type: 'destination', target: 'observable', 'sub-target': 'mac-addr', x_exclusive: true, x_embed: 'dst_ref',
+        },
+        {
+          type: 'destination', target: 'mac-addr', x_exclusive: true, x_embed: 'dst_ref',
+        },
+        {
+          type: 'destination', target: 'observable', 'sub-target': 'domain-name', x_exclusive: true, x_embed: 'dst_ref',
+        },
+        {
+          type: 'dest', target: 'domain-name', x_exclusive: true, x_embed: 'dst_ref',
+        },
+
         {
           type: 'encapsulates', target: 'observable', 'sub-target': 'network-traffic', x_embed: 'encapsulates_refs',
         },
@@ -44,6 +95,8 @@ class NetworkTraffic extends Base {
 
     this.properties.src_payload_ref.control = 'hidden';
     this.properties.dst_payload_ref.control = 'hidden';
+    this.properties.src_ref.control = 'hidden';
+    this.properties.dst_ref.control = 'hidden';
     this.properties.encapsulates_refs.control = 'hidden';
     this.properties.encapsulated_by_ref.control = 'hidden';
     this.properties.protocols.control = 'csv';

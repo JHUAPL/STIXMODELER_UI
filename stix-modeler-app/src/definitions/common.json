@@ -1,6 +1,6 @@
 {
   "$id": "http://raw.githubusercontent.com/oasis-open/cti-stix2-json-schemas/stix2.1/schemas/common/core.json",
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "core",
   "description": "Common properties and behavior across all STIX Domain Objects and STIX Relationship Objects.",
   "type": "object",
@@ -14,7 +14,6 @@
       "description": "The type property identifies the type of STIX Object (SDO, Relationship Object, etc). The value of the type field MUST be one of the types defined by a STIX Object (e.g., indicator).",
       "not": {
         "enum": [
-          "incident",
           "action"
         ]
       }
@@ -34,6 +33,14 @@
     "created_by_ref": {
       "$ref": "../common/identifier.json",
       "description": "The ID of the Source object that describes who created this object."
+    },
+    "labels": {
+      "type": "array",
+      "description": "The labels property specifies a set of terms used to describe this object.",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
     },
     "created": {
       "description": "The created property represents the time at which the first version of this object was created. The timstamp value MUST be precise to the nearest millisecond.",
@@ -96,6 +103,22 @@
         "$ref": "../common/granular-marking.json"
       },
       "minItems": 1
+    },
+    "extensions": {
+      "description": "Specifies any extensions of the object, as a dictionary.",
+      "type": "object",
+      "minProperties": 1,
+      "patternProperties": {
+          "^([a-z][a-z0-9]*)+(-[a-z0-9]+)*\\-ext$": {
+            "type": "object",
+            "minProperties": 1,
+            "allOf": [{ "$ref": "../common/properties.json" }]
+          },
+          "^extension-definition--[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$": {
+            "allOf": [{ "$ref": "../common/extension.json" }]
+          }
+        },
+        "additionalProperties": false
     }
   },
   "allOf": [{ "$ref": "../common/properties.json" }],
@@ -113,7 +136,7 @@
       },
       {
         "required": [
-          "usernames"
+          "username"
         ]
       },
       {

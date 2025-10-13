@@ -1,4 +1,4 @@
-@import '../../../defaults';
+@use '../../../defaults';
 
 .er-container {
   padding-left: 20px;
@@ -6,7 +6,7 @@
 
   .er-header {
     font-weight: bold;
-    color: $default-active-bg;
+    color: defaults.$default-active-bg;
     padding-bottom: 3px;
 
     span {
@@ -18,11 +18,11 @@
 
   .er-body {
     overflow: auto;
-    border: 1px solid $standard-border-color;
+    border: 1px solid defaults.$standard-border-color;
     min-height: 50px;
 
     .er-block {
-      border: 1px solid $standard-border-color;
+      border: 1px solid defaults.$standard-border-color;
       margin: 10px;
 
       .er-block-row {
@@ -43,7 +43,7 @@
         }
 
         .remove {
-          color: $error-font;
+          color: defaults.$error-font;
         }
 
         .remove-er {
@@ -53,7 +53,7 @@
 
         .add {
           padding-top: 15px;
-          color: $default-active-bg;
+          color: defaults.$default-active-bg;
         }
       }
     }

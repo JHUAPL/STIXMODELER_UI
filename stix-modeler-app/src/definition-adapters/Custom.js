@@ -24,12 +24,7 @@ class Custom extends Base {
     const def = deepmerge(definition_extension, rawDefinition);
     super(common, def);
 
-    const extProps = { extension_type: extensionDefinition.extension_types[0], };
-    this.properties.extensions = {};
-    this.properties.extensions.type = 'object';
-    this.properties.extensions.value = {};
-    this.properties.extensions.value[extensionDefinition.id] = extProps;
-    this.properties.extensions.control = 'hidden';
+    this.extensions.push(extensionDefinition.uiid);
   }
 }
 

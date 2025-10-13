@@ -17,11 +17,18 @@ class MarkingDefinitionAmber extends Base {
 
     super(common, def);
 
+    this.properties.definition_type = {
+      value: 'tlp',
+      type: 'string',
+      control: 'hidden'
+    }
     this.properties.definition = {
-      tlp: 'amber',
+      value: {
+        tlp: 'amber',
+      },
+      type: 'object',
+      control: 'hidden'
     };
-
-    this.properties.definition.control = 'hidden';
   }
 }
 

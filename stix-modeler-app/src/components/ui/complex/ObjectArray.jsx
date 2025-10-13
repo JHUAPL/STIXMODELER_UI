@@ -2,6 +2,7 @@ import React from 'react';
 import { observer } from 'mobx-react';
 import { Tooltip } from 'react-tooltip';
 import { v4 as uuid } from 'uuid';
+import classNames from 'classnames';
 import Text from '../inputs/Text';
 import './externalreferences.scss';
 
@@ -15,8 +16,6 @@ class ObjectArray extends React.Component {
     this.onClickAddHandler = this.onClickAddHandler.bind(this);
     this.onClickDeletePropertyHandler = this.onClickDeletePropertyHandler.bind(this);
   }
-
-  componentDidMount() {}
 
   onChangeArrayObjectHandler(event, value) {
     return undefined;
@@ -49,6 +48,9 @@ class ObjectArray extends React.Component {
     const { field, } = this.props;
     const value = this.props.value ? this.props.value : [];
     const { description, } = this.props;
+    const {required, } = this.props;
+    const invalid = required && !value.length;
+    const warning = invalid? (<div className='required-warning'>This field is required</div>) : "";
 
     return (
       <div className="er-container">
@@ -72,7 +74,10 @@ class ObjectArray extends React.Component {
           <Tooltip id={`${field}-tooltip`} />
           <Tooltip id={`add-${field}-tooltip`} />
         </div>
-        <div className="er-body">
+        <div className={classNames({
+          "er-body": true,
+          "invalid":  invalid,
+        })}>
           {value.map((p, i) => (
             <ObjectBlock
               key={i}
@@ -86,6 +91,7 @@ class ObjectArray extends React.Component {
             />
           ))}
         </div>
+        {warning}
       </div>
     );
   }

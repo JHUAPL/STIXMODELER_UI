@@ -1,14 +1,14 @@
-@import '../../../defaults';
+@use '../../../defaults';
 
 input.def {
     height: 39px;
-    border: 1px solid $standard-border-color;
+    border: 1px solid defaults.$standard-border-color;
     background-color: transparent;
     width: 97%;
     padding-left: 10px;
-    color: $dark-font-0;
+    color: defaults.$dark-font-0;
     font-size: 16px;
-    font-family: $default-font-family;
+    font-family: defaults.$default-font-family;
 }
 
 .custom-file-selector {
@@ -16,5 +16,5 @@ input.def {
     padding: 5px 4px 5px 11px;
     color: #fff;
     font-weight: bold;
-    background-color: $default-active-bg;
+    background-color: defaults.$default-active-bg;
 }

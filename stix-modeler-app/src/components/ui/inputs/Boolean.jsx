@@ -9,10 +9,6 @@ class Boolean extends React.Component {
     super(props);
   }
 
-  componentDidMount() {
-
-  }
-
   onClickHandler(field, value) {
     this.props.onClickHandler(field, value);
   }

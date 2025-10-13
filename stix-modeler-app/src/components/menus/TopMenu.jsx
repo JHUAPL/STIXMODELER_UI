@@ -29,7 +29,7 @@ class TopMenu extends React.Component {
   }
 
   render() {
-    let groupLabel = 'Select';
+    let groupLabel = 'Group';
     let groupClass = '';
     let items;
 
@@ -38,7 +38,8 @@ class TopMenu extends React.Component {
       groupClass = 'cancel-btn';
       items = (
         <div id="myDropdown" className="dropdown-content">
-          <a onClick={this.submitGroup}>Create Group</a>
+          <a onClick={this.submitGroup}>Create Group
+          </a>
         </div>
       );
     }
@@ -48,7 +49,7 @@ class TopMenu extends React.Component {
         <div
           data-tooltip-id="select-tooltip"
           data-tooltip-content="Select Nodes"
-          className={`grouping-btn menu-item ${groupClass}`}
+          className={`grouping-btn menu-btn menu-item ${groupClass}`}
           onClick={this.flipGroupMode}
         >
           {groupLabel}
@@ -56,6 +57,8 @@ class TopMenu extends React.Component {
         </div>
       </div>
     );
+
+    const badge = this.props.errors ? (<span className="badge"></span>) : undefined;
 
     return (
       <div className="top-menu">
@@ -74,69 +77,85 @@ class TopMenu extends React.Component {
             />
           </div>
           <div
-            data-tooltip-id="paste-tooltip"
-            data-tooltip-content="Paste JSON"
-            className="json-paste-btn menu-item-medium"
-            onClick={this.props.onClickShowJsonPasteHandler}
+            data-tooltip-id="view-tooltip"
+            data-tooltip-content="View Bundle"
+            className="menu-btn menu-item"
+            onClick={this.props.onClickShowJsonHandler}
           >
-            {'{ + }'}
+            <i className="material-icons">description</i>
           </div>
 
           <div
-            data-tooltip-id="view-tooltip"
-            data-tooltip-content="View JSON"
-            className="json-btn menu-item-small"
-            onClick={this.props.onClickShowJsonHandler}
+            data-tooltip-id="paste-tooltip"
+            data-tooltip-content="Paste Bundle"
+            className="menu-btn menu-item"
+            onClick={this.props.onClickShowJsonPasteHandler}
           >
-            {'{ }'}
+            <i className="material-icons">note_add</i>
           </div>
 
           <div
             data-tooltip-id="schema-tooltip"
             data-tooltip-content="Paste Schema"
-            className="schema-paste-btn menu-item-medium"
+            className="menu-btn menu-item"
             onClick={this.props.onClickShowSchemaPasteHandler}
           >
-            {'{ * }'}
+            <i className="material-icons">add_box</i>
           </div>
+
           <div
-            data-tooltip-id="sdo-tooltip"
-            data-tooltip-content="SDO Extensions"
+            data-tooltip-id="layout"
+            data-tooltip-content="Graph Layout and Filtering"
             className="sdos-btn menu-item"
-            onClick={this.props.onClickShowSDOPickerHandler}
+            onClick={this.props.onClickShowLayoutPanelHandler}
           >
-            Exts
+            Layout
           </div>
 
           <div
             data-tooltip-id="import-tooltip"
             data-tooltip-content="Import Data from File"
-            className="reset-btn menu-item"
+            className="menu-btn menu-item"
             onClick={this.props.onClickShowImporterHandler}
           >
-            Import
+            <i className="material-icons">folder</i>
+          </div>
+          <div
+            data-tooltip-id="sdo-tooltip"
+            data-tooltip-content="SDO Extensions"
+            className="menu-btn menu-item"
+            onClick={this.props.onClickShowExtensionPickerHandler}
+          >
+              EXT
           </div>
           {group}
           <div
             data-tooltip-id="clear-tooltip"
-            data-tooltip-content="Clear JSON"
-            className="reset-btn menu-item"
+            data-tooltip-content="Reset Bundle"
+            className="reset-btn menu-btn menu-item"
             onClick={this.props.onClickResetHandler}
           >
-            <span className="i material-icons">refresh</span>
-            {' '}
-            Reset
+            <span className="material-icons">refresh</span>
           </div>
 
           <div
             data-tooltip-id="submit-tooltip"
-            data-tooltip-content="Submit JSON"
-            className="reset-btn menu-item"
-            onClick={this.props.onClickSubmitHandler}
+            data-tooltip-content="Export JSON"
+            className="menu-btn menu-item"
+            onClick={this.props.onClickExportHandler}
           >
-            <span className="i material-icons">add</span>
+            <i className="material-icons">save</i>
             {' '}
-            Submit
+          </div>
+
+          <div
+            data-tooltip-id="error-tooltip"
+            data-tooltip-content="Bundle Errors"
+            className="menu-btn menu-item"
+            onClick={this.props.onClickShowErrorHandler}
+          >
+            <span className="material-icons">error</span>
+            {badge}
           </div>
 
           <Tooltip id="creator-tooltip" />
@@ -147,6 +166,7 @@ class TopMenu extends React.Component {
           <Tooltip id="import-tooltip" />
           <Tooltip id="clear-tooltip" />
           <Tooltip id="submit-tooltip" />
+          <Tooltip id="error-tooltip" />
         </div>
       </div>
     );

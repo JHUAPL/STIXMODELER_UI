@@ -1,4 +1,4 @@
-@import '../../../defaults';
+@use '../../../defaults';
 
 .ct-container {
     padding-left: 20px;
@@ -7,7 +7,7 @@
 
     .ct-header {
         font-weight: bold;
-        color: $default-active-bg;
+        color: defaults.$default-active-bg;
         padding-bottom: 3px;
 
         span {
@@ -19,7 +19,7 @@
 
     .ct-body {
         overflow-x: hidden;
-        border: 1px solid $standard-border-color;
+        border: 1px solid defaults.$standard-border-color;
         min-height: 50px;
         width: 100%;
 
@@ -46,7 +46,7 @@
 
                 span {
                     cursor: pointer;
-                    color: $default-active-bg;
+                    color: defaults.$default-active-bg;
                     padding-left: 5px;
                 }
             }
@@ -81,12 +81,12 @@
                 }
 
                 .remove {
-                    color: $error-font;
+                    color: defaults.$error-font;
                 }
 
                 .add {
                     padding-top: 15px;
-                    color: $default-active-bg;
+                    color: defaults.$default-active-bg;
                 }
             }
         }

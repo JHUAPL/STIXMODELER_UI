@@ -24,6 +24,12 @@
         display: flex;
         flex-direction: row;
         justify-content: flex-end;
-        height: 30px;
+        padding: 2px;
+        gap: 5px;
+    }
+
+    .json-copy {
+        height: 35px;
+        font-size: 15px;
     }
 }

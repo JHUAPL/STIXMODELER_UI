@@ -20,7 +20,8 @@ class ExtensionDefinition extends Base {
 
     // Hoist vocabs onto properties
     this.properties.extension_types.vocab = this.definitions['extension-type-enum'].enum;
-    this.properties.extension_types.control = 'stringselector';
+    this.properties.extension_types.control = 'hidden';
+    this.properties.extension_properties.control = 'hidden';
   }
 }
 

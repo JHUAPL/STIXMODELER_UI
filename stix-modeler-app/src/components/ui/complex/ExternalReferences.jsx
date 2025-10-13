@@ -2,6 +2,7 @@ import React from 'react';
 import { observer } from 'mobx-react';
 import { Tooltip } from 'react-tooltip';
 import { v4 as uuid } from 'uuid';
+import classNames from 'classnames';
 import Text from '../inputs/Text';
 
 import './externalreferences.scss';
@@ -16,8 +17,6 @@ class ExternalReferences extends React.Component {
     this.onClickAddHandler = this.onClickAddHandler.bind(this);
     this.onClickDeleteHandler = this.onClickDeleteHandler.bind(this);
   }
-
-  componentDidMount() {}
 
   onChangeERHandler(event, value) {
     return undefined;
@@ -48,6 +47,10 @@ class ExternalReferences extends React.Component {
     const { field, } = this.props;
     const value = this.props.value ? this.props.value : [];
     const { description, } = this.props;
+    const { prefix, } = this.props;
+    const { required, } = this.props;
+    const invalid = required && !value.length;
+    const warning = invalid? (<div className='required-warning'>This field is required</div>) : "";
 
     return (
       <div className="er-container">
@@ -71,12 +74,16 @@ class ExternalReferences extends React.Component {
           <Tooltip id={`${field}-tooltip`} />
           <Tooltip id={`${field}-control-tooltip`} />
         </div>
-        <div className="er-body">
+        <div className={classNames({
+          "er-body": true,
+          "invalid": invalid
+        })}>
           {value.map((p, i) => (
             <ReferenceBlock
               key={i}
               i={i}
               kv={p}
+              prefix={prefix}
               onChangeERHandler={this.onChangeERHandler}
               onClickDeleteERHandler={this.onClickDeleteERHandler}
               onClickAddHandler={this.onClickAddHandler}
@@ -84,6 +91,7 @@ class ExternalReferences extends React.Component {
             />
           ))}
         </div>
+        {warning}
       </div>
     );
   }
@@ -92,8 +100,9 @@ class ExternalReferences extends React.Component {
 function ReferenceBlock(props) {
   const blocks = [];
   const idx = props.i;
-  const selectID = `select-${props.i}`;
-  const inputID = `input-${props.i}`;
+  const prefix = props.prefix;
+  const selectID = `select-${prefix}-${props.i}`;
+  const inputID = `input-${prefix}-${props.i}`;
 
   const propValues = [
     'source_name',

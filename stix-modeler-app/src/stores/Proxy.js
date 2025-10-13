@@ -1,7 +1,4 @@
 class Proxy {
-  constructor() {
-
-  }
 
   submit(bundle) {
     console.log(bundle);

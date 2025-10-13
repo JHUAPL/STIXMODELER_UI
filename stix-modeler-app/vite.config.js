@@ -1,3 +1,4 @@
+/// <reference types="vitest/config" />
 import { defineConfig, transformWithEsbuild } from 'vite';
 import react from '@vitejs/plugin-react';
 
@@ -15,9 +16,16 @@ export default defineConfig({
           jsx: 'automatic',
         });
       },
+
     },
     react()
   ],
+
+  test: {
+    globals: true,
+    environment: "jsdom",
+    // ...
+  },
 
   optimizeDeps: {
     force: true,

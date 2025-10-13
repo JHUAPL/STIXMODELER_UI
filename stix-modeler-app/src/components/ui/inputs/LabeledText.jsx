@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import Text from './Text';
 import { observer } from 'mobx-react';
+import classNames from 'classnames';
 
 import './text.scss';
 
@@ -36,6 +38,10 @@ class LabeledText extends React.Component {
 
   render() {
     const inputType = this.props.type ? this.props.type : 'text';
+    const { required, } = this.props ?? "";
+    const { value, } = this.props;
+    const invalid = required && !value.length;
+    const warning = invalid? (<div className='required-warning'>This field is required</div>) : "";
 
     return (
       <div>
@@ -44,14 +50,18 @@ class LabeledText extends React.Component {
           type={inputType}
           ref={(c) => { this.input = c; }}
           autoComplete={this.props.autocomplete || 'off'}
-          className="def"
+          className={classNames({
+            "def": true,
+            "invalid":  invalid
+          })}
           placeholder={this.props.placeholder}
           onChange={this.onChangeHandler}
           onKeyDown={(e) => this.onKeyDownHandler(e)}
-          value={this.props.value}
+          value={value}
           disabled={this.props.disabled}
           id={this.props.id}
         />
+        {warning}
       </div>
     );
   }

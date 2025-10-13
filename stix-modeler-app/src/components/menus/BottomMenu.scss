@@ -1,4 +1,4 @@
-@import '../../defaults';
+@use '../../defaults';
 
 .menu {
     position: fixed;
@@ -29,12 +29,12 @@
             width: 40px;
             height: 40px;
             border-radius: 5px;
-            background-color: $default-active-bg;
+            background-color: defaults.$default-active-bg;
 
             div {
                 padding-top: 10px;
                 padding-left: 7px;
-                color: $light-font-0;
+                color: defaults.$light-font-0;
                 cursor: pointer;
             }
         }

@@ -1,5 +1,6 @@
 import React from 'react';
 import { observer } from 'mobx-react';
+import classNames from 'classnames';
 
 import './text.scss';
 
@@ -38,7 +39,10 @@ class TextArea extends React.Component {
   }
 
   render() {
-    const rows = this.props.rows ? this.props.rows : 1;
+    const {required, } = this.props;
+    const { value, } = this.props;
+    const invalid = required && !value.length;
+    const warning = invalid? (<div className='required-warning'>This field is required</div>) : "";
 
     return (
       <div>
@@ -48,14 +52,18 @@ class TextArea extends React.Component {
             this.input = c;
           }}
           autoComplete={this.props.autocomplete || 'off'}
-          className="def"
+          className={classNames({
+            "def": true,
+            "invalid":  invalid
+          })}
           placeholder={this.props.placeholder}
           onChange={this.onChangeHandler}
           onKeyDown={(e) => this.onKeyDownHandler(e)}
-          value={this.props.value}
+          value={value}
           disabled={this.props.disabled}
           id={this.props.id}
         />
+        {warning}
       </div>
     );
   }

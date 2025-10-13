@@ -1,4 +1,3 @@
-/* eslint-disable react/prefer-stateless-function */
 import React from 'react';
 import { observer } from 'mobx-react';
 import Panel from '../ui/panel/Panel';

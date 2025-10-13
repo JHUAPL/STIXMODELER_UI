@@ -1,7 +1,25 @@
-@import '../../defaults';
+@use '../../defaults';
 
-.nodeLabel {
+.node-label {
     overflow: visible;
     position: relative;
-    bottom: -45px; 
+    bottom: -100%;
+    line-height: 11px;
+    text-align: center;
+}
+
+.node-item {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  background-size: contain;
+  background-repeat: 'no-repeat';
+}
+
+.selected {
+    border: 1px solid blue;
+}
+
+.hovered {
+  border: 1px solid red;
 }

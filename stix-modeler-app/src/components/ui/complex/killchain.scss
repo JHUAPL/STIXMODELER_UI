@@ -1,4 +1,4 @@
-@import '../../../defaults';
+@use '../../../defaults';
 
 .kill-chain-container {
     padding-left: 20px;
@@ -6,7 +6,7 @@
 
     .kill-chain-header {
         font-weight: bold;
-        color: $default-active-bg;
+        color: defaults.$default-active-bg;
         padding-bottom: 3px;
 
         span {
@@ -19,7 +19,7 @@
     .kill-chain-body {
         
         overflow: auto;
-        border: 1px solid $standard-border-color;
+        border: 1px solid defaults.$standard-border-color;
 
         .kill-chain-options {
             display: flex;
@@ -35,7 +35,7 @@
             padding: 5px 5px 5px 10px;
             .material-icons {
                 vertical-align: middle;
-                color: $error-font;
+                color: defaults.$error-font;
                 cursor: pointer;
             }
         }

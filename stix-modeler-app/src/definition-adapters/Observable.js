@@ -1,6 +1,3 @@
-import _cloneDeep from 'lodash/cloneDeep';
-import deepmerge from 'deepmerge';
-
 import { Base } from './Base';
 
 class Observable extends Base {

@@ -2,6 +2,7 @@ import React from 'react';
 import { observer } from 'mobx-react';
 import { Tooltip } from 'react-tooltip';
 import TextArea from '../inputs/TextArea';
+import classNames from 'classnames';
 
 import './confirmtextarea.scss';
 
@@ -16,10 +17,6 @@ class ConfirmTextarea extends React.Component {
     this.state = {
       value: '',
     };
-  }
-
-  componentDidMount() {
-
   }
 
   onChangeInputHandler(event) {
@@ -42,6 +39,9 @@ class ConfirmTextarea extends React.Component {
     const { field, } = this.props;
     const value = this.props.value ? this.props.value : [];
     const { description, } = this.props;
+    const {required, } = this.props;
+    const invalid = required && !value.length;
+    const warning = invalid? (<div className='required-warning'>This field is required</div>) : "";
 
     return (
       <div className="ct-container">
@@ -56,7 +56,10 @@ class ConfirmTextarea extends React.Component {
           </span>
           <Tooltip id={`${field}-tooltip`} />
         </div>
-        <div className="ct-body">
+        <div className={classNames({
+          "ct-body": true,
+          "invalid":  invalid
+        })}>
           <div className="ct-block-input">
             <div className="input">
               <TextArea
@@ -74,6 +77,7 @@ class ConfirmTextarea extends React.Component {
             {value}
           </div>
         </div>
+        {warning}
       </div>
     );
   }

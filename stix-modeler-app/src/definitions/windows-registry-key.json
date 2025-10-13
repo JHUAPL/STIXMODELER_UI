@@ -1,6 +1,6 @@
 {
   "$id": "http://raw.githubusercontent.com/oasis-open/cti-stix2-json-schemas/stix2.1/schemas/observables/windows-registry-key.json",
-  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "windows-registry-key",
   "description": "The Registry Key Object represents the properties of a Windows registry key.",
   "type": "object",
@@ -23,7 +23,7 @@
         },
         "key": {
           "type": "string",
-          "pattern": "^HKEY_LOCAL_MACHINE|hkey_local_machine|HKEY_CURRENT_USER|hkey_current_user|HKEY_CLASSES_ROOT|hkey_classes_root|HKEY_CURRENT_CONFIG|hkey_current_config|HKEY_PERFORMANCE_DATA|hkey_performance_data|HKEY_USERS|hkey_users|HKEY_DYN_DATA|hkey_dyn_data",
+          "not": {"pattern": "^HKLM|HKCC|HKCR|HKCU|HKU|hklm|hkcc|hkcr|hkcu|hku"},
           "description": "Specifies the full registry key including the hive."
         },
         "values": {

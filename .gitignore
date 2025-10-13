@@ -4,6 +4,5 @@
 # Distribution
 /stix-modeler-app/dist/
 
-#Examples
-/samples/
-/examples/junk-schemas/
+# Schemas
+/stix-modeler-app/schemas/*.json
