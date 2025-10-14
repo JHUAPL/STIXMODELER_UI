@@ -1,0 +1,42 @@
+@use "../defaults";
+
+.header {
+    padding: 20px;
+    font-size: 30px;
+    height: 40px;
+    background-color: defaults.$lt-gray-bg;
+}
+
+
+.submission-error {
+
+    .container-header {
+        padding: 10px;
+        font-size: 18px;
+
+        img {
+            vertical-align: middle;
+            padding-right: 10px;
+        }
+    }
+
+    .row {
+        padding-left: 55px;
+
+        span {
+            color: defaults.$default-active-bg;
+            padding-right: 6px;
+        }
+    }
+
+    .submission-item {
+        border: 1px black solid;
+    }
+
+    .submission-item:hover {
+        background-color: beige;
+    }
+
+    overflow-y: scroll;
+    
+}

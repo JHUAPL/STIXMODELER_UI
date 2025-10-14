@@ -3,10 +3,7 @@
 This is a fork of the [STIX Modeler](https://github.com/STIX-Modeler/UI/tree/develop), originally created by Jason Minnick
 
 ## Overview
-A React-based user interface tool for visualizing, creating, and modifying STIX 2.1 bundles.
-
-This material is based upon work supported by the U.S. Department of Homeland Security / Cybersecurity and Infrastructure Security Agency. Any views and conclusions contained on this page are those of the authors and should not be interpreted as necessarily representing the official policies, either
-expressed or implied, of the U.S. Department of Homeland Security / Cybersecurity and Infrastructure Security Agency.
+A React-based user interface tool for visualizing, creating, and modifying STIX 2.1 bundles
 
 ## New Features
 - Define custom STIX Domain Objects (SDO) using schemas
@@ -19,7 +16,38 @@ expressed or implied, of the U.S. Department of Homeland Security / Cybersecurit
 
 This modeler was developed in and optimized for use with node v20.11.1 and npm 10.2.4
 
-Earlier versions of node may not be supported
+Other versions of node may not be supported
+
+All listed third-party dependencies grant use, modification, and distribution rights under the MIT License.
+
+## Third-Party Dependencies
+- "@vitejs/plugin-react": "5.0.4",
+- "classnames": "2.5.1",
+- "d3-hierarchy": "3.1.2",
+- "deepmerge": "4.3.1",
+- "lodash": "4.17.21",
+- "mobx": "6.15.0",
+- "mobx-react": "9.2.1",
+- "moment": "2.30.1",
+- "prop-types": "15.8.1",
+- "rc-slider": "11.1.9",
+- "react": "19.2.0",
+- "react-datepicker": "8.7.0",
+- "react-dom": "19.2.0",
+- "react-tooltip": "5.29.1",
+- "reactflow": "11.11.4",
+- "sass": "1.93.2",
+- "uuid": "13.0.0",
+- "vite": "7.1.9"
+
+## Third-Party Development Dependencies
+- "@eslint/js": "9.37.0",
+- "eslint": "9.37.0",
+- "globals": "16.4.0",
+- "jsdom": "27.0.0",
+- "typescript-eslint": "8.46.0",
+- "vitest": "3.2.4"
+
 
 # Installation and Use 
 
@@ -43,6 +71,13 @@ Earlier versions of node may not be supported
 - Added functionality for creating new Group SDOs via clicking and selecting SDOs
 - Updated dependencies and removed unused dependencies
 - Upgraded handling of default field and relationship values
+- Added bundle validation for required SDO properties
+- Added bundle file export
+- Added vitest testing infrastructure
+- Added unknown object and property handling
+- Added automatic schema loading
+- Added UI configuration via config file
+- Updated STIX schemas to latest versions
 
 ## Bug Fixes
 
@@ -51,6 +86,10 @@ Earlier versions of node may not be supported
 - Fixed implied fields based on relationships between nodes (e.g. "created_by")
 - Fixed import and modification of nodes with "hashes" fields
 - Added ability to delete external_reference objects from external_references fields
+- Fixed inclusion of invalid fields in relationship objects
+- Fixed extension definition inconsistency
+
+
 
 ## Definitions
 
@@ -88,8 +127,6 @@ Specific vocab notes
 - labels: there are placeholder values located in definition-adapters/Base.js. This can easily be updated to reflect your sharing group or company's standard list for each object or even hidden with the `control` property.
 
 # Quality Assurance
-## Style Guide
-The source code follows a modification of the [Airbnb Javascript Style Guide](https://airbnb.io/javascript/react/)
 ## Automated Tools
 The project uses eslint for quality assurance and styling.
 - See current code quality issues: `npm run lint`

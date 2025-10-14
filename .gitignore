@@ -1,0 +1,8 @@
+# Node_Moludes
+/stix-modeler-app/node_modules
+
+# Distribution
+/stix-modeler-app/dist/
+
+# Schemas
+/stix-modeler-app/schemas/*.json
