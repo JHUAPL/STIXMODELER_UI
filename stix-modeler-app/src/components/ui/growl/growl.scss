@@ -1,0 +1,12 @@
+@use "../../../defaults";
+
+.growl {
+    position: fixed;
+    left: 10px;
+    top: 10px;
+    z-index: defaults.$growl-index;
+    background-color: defaults.$default-active-bg;
+    color: defaults.$light-font-0;
+    padding: 11px;
+    border-radius: 5px;
+}

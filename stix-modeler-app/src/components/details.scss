@@ -1,0 +1,120 @@
+@use '../defaults';
+
+.details {
+    font-size: 18px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+
+    .header {
+        padding: 20px;
+        font-size: 18px;
+        height: 40px;
+
+        display: flex;
+        flex-direction: row;
+
+        background-color: defaults.$lt-gray-bg;
+
+        .title {
+            padding-top: 5px;
+            img {
+                vertical-align: middle;
+                padding-right: 5px;
+            }
+
+            flex: 1;
+        }
+
+        .delete {
+            padding-left: 7px;
+            width: 80px;
+            display: flex;
+            background-color: defaults.$default-active-bg;
+            border-radius: 5px;
+            padding-top: 7px;
+            color: defaults.$light-font-0;
+            cursor: pointer;
+
+            font-size: 14px;
+
+            span {
+                padding-left: 1px;
+            }
+
+            .text {
+                padding-top: 3px;
+            }
+        }
+
+        .delete:hover {
+            background-color: defaults.$error-font;
+        }
+    }
+
+    .invalid {
+        border: red solid 1px;
+    }
+
+    .required-warning {
+        color: red;
+        font-size: 13px;
+    }
+
+    .body {
+        overflow-y: scroll;
+        overflow-x: hidden;
+        flex: 1;
+
+        .item {
+            padding-left: 20px;
+            padding-top: 15px;
+            font-weight: normal;
+
+            .horizontal-slider {
+                width: 98%;
+            }
+
+            .item-header {
+                font-weight: bold;
+                color: defaults.$default-active-bg;
+                padding-bottom: 3px;
+
+                span {
+                    padding-left: 3px;
+                    vertical-align: middle;
+                    font-size: 14px;
+                    cursor: pointer;
+                }
+            }
+
+            .inferred-header {
+                color: defaults.$warning-font;
+            }
+
+            #unknown-properties {
+                padding-left: 10px;
+                margin: 0;
+            }
+
+            .unknown-header {
+                color: defaults.$error-font;
+
+            }
+
+            .unknown-value {
+                color: #849BB0;
+            }
+        }
+
+        .slider {
+            padding-bottom: 20px;
+        }
+    }
+
+    .footer {
+        height: 40px;
+    }
+
+
+}

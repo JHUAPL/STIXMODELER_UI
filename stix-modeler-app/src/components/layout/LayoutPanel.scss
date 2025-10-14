@@ -1,0 +1,48 @@
+.header {
+    padding: 10px;
+}
+
+.content {
+    margin: 10px;
+    padding: 10px;
+    border: solid 1px #dddddd;
+}
+
+.layout-panel {
+    .spacing-input {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+        
+        label {
+            flex: 1;
+            margin-right: 10px;
+        }
+
+        input {
+            flex: 2;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+    }
+    .icon-row {
+      display: flex;
+      justify-content: space-between;
+      margin: 10px;
+  
+      img {
+        width: 40px;  // adjust the size as needed
+        height: 40px; // adjust the size as needed
+        cursor: pointer;
+
+        transition: box-shadow 0.3s ease;
+
+        &:hover {
+            box-shadow: 0 0 10px 2px rgba(0, 123, 255, 0.75); // blue glow effect
+        }
+      }      
+    }
+}
+  
