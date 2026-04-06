@@ -1,7 +1,7 @@
 import deepmerge from 'deepmerge';
 import moment from 'moment';
 
-const SPEC_VERSION = 2.1;
+const SPEC_VERSION = "2.1";
 
 const COMMON_RELS = [
   {
