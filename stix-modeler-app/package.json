@@ -9,7 +9,7 @@
     "test": "vitest",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "lint:fix": "npm run lint -- --fix",
-    "preview": "vite preview"
+    "preview": "vite preview --host"
   },
   "dependencies": {
     "@vitejs/plugin-react": "^5.0.0",
@@ -22,14 +22,14 @@
     "moment": "^2.30.1",
     "prop-types": "^15.8.0",
     "rc-slider": "^11.1.0",
-    "react": "^19.0.0",
+    "react": "^19.0.1",
     "react-datepicker": "^8.7.0",
-    "react-dom": "^19.0.0",
+    "react-dom": "^19.0.1",
     "react-tooltip": "^5.29.0",
     "reactflow": "^11.11.0",
     "sass": "^1.93.0",
     "uuid": "13.0.0",
-    "vite": "^7.1.0"
+    "vite": "^7.2.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.0.0",
